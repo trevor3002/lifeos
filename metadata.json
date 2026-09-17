@@ -1,0 +1,6 @@
+{
+  "name": "Life OS",
+  "description": "An intuitive personal Life OS integrating tasks, habits, and daily journaling into a unified dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
