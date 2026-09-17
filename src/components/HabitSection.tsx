@@ -11,7 +11,7 @@ import {
   Sun,
   Sunset,
   Moon,
-  Sparkles,
+  Clock,
   Check,
 } from 'lucide-react';
 
@@ -29,7 +29,7 @@ const TIME_ICONS: Record<HabitTimeOfDay, React.ReactNode> = {
   morning: <Sun className="w-3 h-3 text-amber-400" />,
   afternoon: <Sunset className="w-3 h-3 text-orange-400" />,
   evening: <Moon className="w-3 h-3 text-teal-400" />,
-  anytime: <Sparkles className="w-3 h-3 text-emerald-400" />,
+  anytime: <Clock className="w-3 h-3 text-emerald-400" />,
 };
 
 // Pure architectural palette - zero purple

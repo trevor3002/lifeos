@@ -6,7 +6,7 @@ import {
   CheckSquare,
   Flame,
   BookOpen,
-  Sparkles,
+  CalendarCheck,
   Plus,
   Database,
   Search,
@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'tasks', label: 'Tasks', icon: <CheckSquare className="w-4 h-4" /> },
     { id: 'habits', label: 'Habits', icon: <Flame className="w-4 h-4" /> },
     { id: 'journal', label: 'Journal', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'review', label: 'Synthesis', icon: <Sparkles className="w-4 h-4" /> },
+    { id: 'review', label: 'Review', icon: <CalendarCheck className="w-4 h-4" /> },
   ];
 
   const domains: { id: LifeDomain | 'all'; label: string }[] = [
@@ -58,10 +58,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       {/* Top Header */}
       <header className="sticky top-0 z-30 border-b border-[#24282f] bg-[#0c0d10]/95 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 sm:h-16 items-center justify-between gap-3">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+          <div className="flex h-14 sm:h-16 items-center justify-between gap-2.5">
             {/* Brand Logo */}
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
               <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-zinc-900 border border-[#2e333b] shadow-inner">
                 <span className="font-mono text-xs font-bold tracking-wider text-amber-400">OS</span>
               </div>
@@ -107,7 +107,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </nav>
 
             {/* Top Right Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               {/* Quick Add Button (Desktop) */}
               <button
                 id="quick-add-btn"
@@ -126,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="data-backup-btn"
                 onClick={onOpenDataModal}
-                className="flex items-center justify-center rounded-lg border border-[#24282f] bg-[#121316] p-2 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition active:scale-95"
+                className="flex items-center justify-center rounded-lg border border-[#24282f] bg-[#121316] p-2 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition active:scale-95 min-h-[36px] min-w-[36px]"
                 title="Backup, Import & Export Data"
               >
                 <Database className="w-4 h-4" />
@@ -135,9 +135,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Subheader: Domain Filter & Search */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 py-2.5 border-t border-[#1e2227] text-xs">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 py-2 border-t border-[#1e2227] text-xs">
             {/* Life Domain Filter Chips (Horizontal Touch Scroll on Mobile) */}
-            <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto no-scrollbar py-0.5">
+            <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto no-scrollbar py-0.5 -mx-1 px-1 touch-pan-x">
               {domains.map((domain) => {
                 const isSelected = selectedDomain === domain.id;
                 return (
@@ -145,7 +145,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={domain.id}
                     id={`domain-filter-${domain.id}`}
                     onClick={() => setSelectedDomain(domain.id)}
-                    className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition whitespace-nowrap min-h-[32px] flex items-center ${
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition whitespace-nowrap min-h-[32px] flex items-center shrink-0 active:scale-95 ${
                       isSelected
                         ? 'bg-amber-500/15 text-amber-300 border border-amber-500/40 font-semibold'
                         : 'bg-[#14161a] text-zinc-400 hover:text-zinc-200 border border-[#24282f]'
@@ -166,14 +166,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 placeholder="Filter tasks, habits, notes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-md border border-[#24282f] bg-[#121316] pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none transition min-h-[34px]"
+                className="w-full rounded-md border border-[#24282f] bg-[#121316] pl-8 pr-7 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none transition min-h-[34px]"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-zinc-500 hover:text-zinc-300"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-zinc-500 hover:text-zinc-300 min-h-[24px] min-w-[24px] flex items-center justify-center"
                 >
-                  esc
+                  ✕
                 </button>
               )}
             </div>
@@ -181,19 +181,19 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </header>
 
-      {/* Mobile-First Bottom Navigation Dock (Fixed Thumb Zone) */}
+      {/* Mobile-First Bottom Navigation Dock (Optimized for Portrait Thumb-Reach) */}
       <nav
         id="mobile-bottom-dock"
-        className="fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-[#24282f] bg-[#0c0d10]/95 backdrop-blur-xl px-2 py-1.5 shadow-2xl safe-area-inset-bottom"
+        className="fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-[#24282f] bg-[#0c0d10]/95 backdrop-blur-xl px-2 pt-1 pb-[max(env(safe-area-inset-bottom,0px),0.5rem)] shadow-2xl"
       >
-        <div className="flex items-center justify-around">
+        <div className="flex items-center justify-around max-w-md mx-auto">
           {tabs.slice(0, 2).map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition ${
+                className={`flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition active:scale-95 ${
                   isActive ? 'text-amber-400 font-bold' : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -207,8 +207,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-center -mt-5">
             <button
               onClick={onOpenQuickAdd}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-zinc-950 shadow-lg shadow-amber-500/20 active:scale-95 transition border-2 border-[#0c0d10]"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-zinc-950 shadow-lg shadow-amber-500/25 active:scale-90 transition-transform border-2 border-[#0c0d10] cursor-pointer"
               title="Quick Capture"
+              aria-label="Quick Capture"
             >
               <Plus className="w-5 h-5 stroke-[3]" />
             </button>
@@ -226,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setActiveTab(tab.id);
                   }
                 }}
-                className={`flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition ${
+                className={`flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition active:scale-95 ${
                   isActive ? 'text-amber-400 font-bold' : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -240,3 +241,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </>
   );
 };
+

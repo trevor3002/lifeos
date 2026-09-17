@@ -4,7 +4,7 @@ import { formatDatePretty, getTodayString } from '../utils/dateUtils';
 import { MOOD_META } from '../utils/domainColors';
 import {
   X,
-  Sparkles,
+  CalendarCheck,
   CheckCircle2,
   Flame,
   BookOpen,
@@ -64,10 +64,10 @@ Score: ${dailyScore}%
         <div className="flex items-center justify-between pb-3.5 border-b border-[#1f2228]">
           <div className="flex items-center gap-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-800 text-amber-400 border border-zinc-700">
-              <Sparkles className="w-4 h-4" />
+              <CalendarCheck className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-zinc-100">Daily Life OS Synthesis</h3>
+              <h3 className="text-base sm:text-lg font-bold text-zinc-100">Daily Review &amp; Summary</h3>
               <p className="text-xs text-zinc-400 font-mono">{formatDatePretty(todayStr)}</p>
             </div>
           </div>
@@ -78,7 +78,7 @@ Score: ${dailyScore}%
               title="Copy text summary"
             >
               <Share2 className="w-3.5 h-3.5 text-amber-400" />
-              <span>{copied ? 'Copied!' : 'Copy Summary'}</span>
+              <span>{copied ? 'Copied!' : 'Copy'}</span>
             </button>
             <button
               onClick={onClose}
@@ -104,7 +104,7 @@ Score: ${dailyScore}%
                 ? 'Disciplined focus and deep routine harmony sustained today.'
                 : dailyScore >= 60
                 ? 'Strong daily momentum across your key priorities.'
-                : 'Complete 1 remaining action item and evening wind-down.'}
+                : 'Complete remaining action items and evening wind-down.'}
             </p>
           </div>
         </div>
@@ -209,7 +209,7 @@ Score: ${dailyScore}%
             onClick={onClose}
             className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-4 py-2 text-xs font-semibold transition min-h-[40px]"
           >
-            Close Synthesis
+            Close Review
           </button>
         </div>
       </div>

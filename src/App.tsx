@@ -95,7 +95,7 @@ export default function App() {
       />
 
       {/* Main Content Area - pb-28 ensures bottom navigation dock never covers content on mobile */}
-      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-28 sm:pb-10">
+      <main className="flex-1 mx-auto max-w-7xl w-full px-3 sm:px-6 lg:px-8 py-3.5 sm:py-6 pb-28 sm:pb-10">
         {/* Daily Holistic Metric Banner */}
         <DailyOverviewBanner
           dailyScore={dailyScore}
@@ -228,7 +228,7 @@ export default function App() {
         onAddJournal={addJournal}
       />
 
-      {/* Daily Review / Synthesis Modal */}
+      {/* Daily Review Modal */}
       <DailyReviewModal
         isOpen={isDailyReviewOpen}
         onClose={() => setIsDailyReviewOpen(false)}

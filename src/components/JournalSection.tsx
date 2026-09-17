@@ -6,7 +6,7 @@ import {
   BookOpen,
   Plus,
   Trash2,
-  Sparkles,
+  Award,
   Heart,
   Tag,
   Zap,
@@ -124,7 +124,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               {filteredJournals.length}
             </span>
           </div>
-          <p className="text-xs text-zinc-400">Deep daily reflections, gratitude logs, and win synthesis</p>
+          <p className="text-xs text-zinc-400">Deep daily reflections, gratitude logs, and achievements</p>
         </div>
 
         {/* Filters & Write Action Button */}
@@ -187,7 +187,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
           {/* Quick Cross-Pillar Integration Button */}
           <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[#16181d] border border-[#2e333b] p-2.5 text-xs">
             <div className="flex items-center gap-2 text-zinc-300">
-              <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+              <Award className="w-4 h-4 text-amber-400 shrink-0" />
               <span>
                 Today: <strong className="text-zinc-100">{todayTasksCompleted.length} tasks</strong> &amp;{' '}
                 <strong className="text-zinc-100">{todayHabitsCompleted.length} habits</strong> completed.
