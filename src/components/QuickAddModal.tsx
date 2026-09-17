@@ -105,25 +105,32 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-5 shadow-2xl text-slate-100">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">Quick Capture</h3>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 p-0 sm:p-4 backdrop-blur-sm animate-in fade-in">
+      <div className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl border-t sm:border border-[#24282f] bg-[#121316] p-5 shadow-2xl text-zinc-100 max-h-[90vh] overflow-y-auto">
+        {/* Mobile Drag Indicator Handle */}
+        <div className="w-12 h-1 rounded-full bg-zinc-700 mx-auto mb-3 sm:hidden" />
+
+        <div className="flex items-center justify-between pb-3 border-b border-[#1f2228]">
+          <h3 className="text-xs font-mono font-bold text-zinc-100 uppercase tracking-wider">
+            Quick Life OS Capture
+          </h3>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-white transition min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Type Switcher */}
-        <div className="mt-3 flex rounded-xl bg-slate-950 p-1 border border-slate-800">
+        <div className="mt-3 flex rounded-xl bg-[#0c0d10] p-1 border border-[#24282f]">
           <button
             type="button"
             onClick={() => setType('task')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition ${
-              type === 'task' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition min-h-[38px] ${
+              type === 'task'
+                ? 'bg-zinc-800 text-zinc-100 shadow-sm border border-zinc-700'
+                : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
             <CheckSquare className="w-3.5 h-3.5" />
@@ -132,21 +139,25 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
           <button
             type="button"
             onClick={() => setType('habit')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition ${
-              type === 'habit' ? 'bg-teal-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition min-h-[38px] ${
+              type === 'habit'
+                ? 'bg-zinc-800 text-zinc-100 shadow-sm border border-zinc-700'
+                : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            <Flame className="w-3.5 h-3.5" />
+            <Flame className="w-3.5 h-3.5 text-emerald-400" />
             <span>Habit</span>
           </button>
           <button
             type="button"
             onClick={() => setType('journal')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition ${
-              type === 'journal' ? 'bg-pink-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition min-h-[38px] ${
+              type === 'journal'
+                ? 'bg-zinc-800 text-zinc-100 shadow-sm border border-zinc-700'
+                : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
+            <BookOpen className="w-3.5 h-3.5 text-amber-400" />
             <span>Journal</span>
           </button>
         </div>
@@ -162,16 +173,16 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   placeholder="Task title..."
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+                  className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-amber-500 focus:outline-none min-h-[44px]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-1">Domain</label>
+                  <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Domain</label>
                   <select
                     value={taskDomain}
                     onChange={(e) => setTaskDomain(e.target.value as LifeDomain)}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2 py-1.5 text-xs text-zinc-200 focus:outline-none min-h-[38px]"
                   >
                     <option value="work">Work</option>
                     <option value="personal">Personal</option>
@@ -181,11 +192,11 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-1">Priority</label>
+                  <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Priority</label>
                   <select
                     value={taskPriority}
                     onChange={(e) => setTaskPriority(e.target.value as Priority)}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2 py-1.5 text-xs text-zinc-200 focus:outline-none min-h-[38px]"
                   >
                     <option value="urgent">Urgent</option>
                     <option value="high">High</option>
@@ -204,19 +215,19 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   type="text"
                   autoFocus
                   required
-                  placeholder="Habit name (e.g. 50 pushups, 20m reading)..."
+                  placeholder="Habit protocol (e.g. 50 pushups, 20m reading)..."
                   value={habitName}
                   onChange={(e) => setHabitName(e.target.value)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-teal-500 focus:outline-none"
+                  className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-amber-500 focus:outline-none min-h-[44px]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-1">Domain</label>
+                  <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Domain</label>
                   <select
                     value={habitDomain}
                     onChange={(e) => setHabitDomain(e.target.value as LifeDomain)}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2 py-1.5 text-xs text-zinc-200 focus:outline-none min-h-[38px]"
                   >
                     <option value="health">Health</option>
                     <option value="work">Work</option>
@@ -226,11 +237,11 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-slate-400 mb-1">Time of Day</label>
+                  <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Time</label>
                   <select
                     value={habitTime}
                     onChange={(e) => setHabitTime(e.target.value as HabitTimeOfDay)}
-                    className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-white focus:outline-none"
+                    className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2 py-1.5 text-xs text-zinc-200 focus:outline-none min-h-[38px]"
                   >
                     <option value="morning">Morning</option>
                     <option value="afternoon">Afternoon</option>
@@ -250,7 +261,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   placeholder="Entry title / subject..."
                   value={journalTitle}
                   onChange={(e) => setJournalTitle(e.target.value)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:border-pink-500 focus:outline-none font-medium"
+                  className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:border-amber-500 focus:outline-none font-medium min-h-[40px]"
                 />
               </div>
               <div>
@@ -258,18 +269,18 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
                   autoFocus
                   required
                   rows={3}
-                  placeholder="Quick thought or reflection..."
+                  placeholder="Capture quick reflection or thought..."
                   value={journalContent}
                   onChange={(e) => setJournalContent(e.target.value)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 p-2.5 text-xs text-white placeholder-slate-500 focus:border-pink-500 focus:outline-none resize-none"
+                  className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] p-2.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none resize-none"
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400 mb-1">Mood</label>
+                <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">State</label>
                 <select
                   value={journalMood}
                   onChange={(e) => setJournalMood(e.target.value as JournalMood)}
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-white focus:outline-none"
+                  className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2 py-1.5 text-xs text-zinc-200 focus:outline-none min-h-[38px]"
                 >
                   <option value="focused">🎯 Focused</option>
                   <option value="energized">⚡ Energized</option>
@@ -285,13 +296,13 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200"
+              className="rounded-lg px-3 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 min-h-[40px]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 text-xs font-semibold shadow-sm transition"
+              className="rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-4 py-2 text-xs shadow-sm transition min-h-[40px]"
             >
               Capture to Life OS
             </button>

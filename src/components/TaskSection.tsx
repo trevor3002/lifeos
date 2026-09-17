@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Task, LifeDomain, Priority, TaskStatus } from '../types';
+import { Task, LifeDomain, Priority } from '../types';
 import { DOMAIN_META, PRIORITY_META } from '../utils/domainColors';
 import { formatDatePretty, getTodayString } from '../utils/dateUtils';
 import {
@@ -12,7 +12,7 @@ import {
   Clock,
   Calendar,
   Layers,
-  Filter,
+  Check,
 } from 'lucide-react';
 
 interface TaskSectionProps {
@@ -29,7 +29,6 @@ interface TaskSectionProps {
 export const TaskSection: React.FC<TaskSectionProps> = ({
   tasks,
   onAddTask,
-  onUpdateTask,
   onDeleteTask,
   onToggleStatus,
   onToggleSubtask,
@@ -40,7 +39,7 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
   const [isAdding, setIsAdding] = useState(false);
   const [expandedTaskIds, setExpandedTaskIds] = useState<Record<string, boolean>>({});
 
-  // New task form state
+  // Form state
   const today = getTodayString();
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
@@ -95,7 +94,6 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
       })),
     });
 
-    // Reset
     setNewTitle('');
     setNewDescription('');
     setNewSubtasks([]);
@@ -104,34 +102,34 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
   };
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm">
+    <section className="rounded-2xl border border-[#24282f] bg-[#121316] p-4 sm:p-5 shadow-sm">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-[#1f2228]">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-indigo-400" />
-              Tasks &amp; Action Items
+            <h3 className="text-base sm:text-lg font-bold text-zinc-100 flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              Action Items
             </h3>
-            <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-300">
+            <span className="rounded-md bg-zinc-800 px-2 py-0.5 font-mono text-[11px] text-zinc-300">
               {filteredTasks.length}
             </span>
           </div>
-          <p className="text-xs text-slate-400">High-leverage outputs organized by life domain</p>
+          <p className="text-xs text-zinc-400">High-leverage outputs organized by life domain</p>
         </div>
 
-        {/* Filters & Add Button */}
-        <div className="flex items-center gap-2">
+        {/* Filters & Add Action Button */}
+        <div className="flex items-center gap-2 justify-between sm:justify-end">
           {/* Status filter pills */}
-          <div className="flex items-center rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs">
+          <div className="flex items-center rounded-lg bg-[#0c0d10] p-1 border border-[#24282f] text-xs">
             {(['all', 'active', 'completed'] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => setStatusFilter(s)}
-                className={`rounded-md px-2.5 py-1 text-[11px] font-medium capitalize transition ${
+                className={`rounded-md px-2.5 py-1 text-[11px] font-medium capitalize transition min-h-[28px] ${
                   statusFilter === s
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-zinc-800 text-zinc-100 font-semibold shadow-sm border border-zinc-700'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
                 {s}
@@ -141,9 +139,9 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
 
           <button
             onClick={() => setIsAdding(!isAdding)}
-            className="flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition active:scale-95"
+            className="flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 px-3 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 min-h-[36px]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5 stroke-[3]" />
             <span>New Task</span>
           </button>
         </div>
@@ -153,14 +151,16 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
       {isAdding && (
         <form
           onSubmit={handleCreateTask}
-          className="mt-4 rounded-xl border border-indigo-500/30 bg-slate-950/80 p-4 space-y-3.5 animate-in fade-in"
+          className="mt-4 rounded-xl border border-amber-500/30 bg-[#0c0d10] p-4 space-y-3.5 animate-in fade-in"
         >
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400">Create New Action Item</h4>
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-400">
+              New Action Item
+            </h4>
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-zinc-500 hover:text-zinc-300"
             >
               Cancel
             </button>
@@ -170,31 +170,31 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
             <input
               type="text"
               required
-              placeholder="Task title (e.g. Prepare client deck for Q4 review)..."
+              placeholder="Task title (e.g. Complete quarterly architecture review)..."
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-amber-500 focus:outline-none min-h-[44px]"
             />
           </div>
 
           <div>
             <textarea
-              placeholder="Additional context, notes, or execution details (optional)..."
+              placeholder="Additional context or execution details (optional)..."
               rows={2}
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:border-indigo-500 focus:outline-none resize-none"
+              className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none resize-none"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {/* Domain */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Life Domain</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Domain</label>
               <select
                 value={newDomain}
                 onChange={(e) => setNewDomain(e.target.value as LifeDomain)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               >
                 <option value="work">Work</option>
                 <option value="personal">Personal</option>
@@ -206,11 +206,11 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
 
             {/* Priority */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Priority</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Priority</label>
               <select
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as Priority)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               >
                 <option value="urgent">Urgent</option>
                 <option value="high">High</option>
@@ -219,39 +219,41 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
               </select>
             </div>
 
-            {/* Due Date */}
+            {/* Due date */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Due Date</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Due Date</label>
               <input
                 type="date"
                 value={newDueDate}
                 onChange={(e) => setNewDueDate(e.target.value)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               />
             </div>
 
-            {/* Estimated Minutes */}
+            {/* Estimate */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Est. Minutes</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Est. Minutes</label>
               <input
                 type="number"
                 min={5}
                 step={5}
                 value={newEstMinutes}
-                onChange={(e) => setNewEstMinutes(e.target.value === '' ? '' : Number(e.target.value))}
-                placeholder="25"
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none"
+                onChange={(e) => setNewEstMinutes(e.target.value ? Number(e.target.value) : '')}
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               />
             </div>
           </div>
 
-          {/* Subtasks Builder */}
-          <div className="pt-1">
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">Subtasks Checklist</label>
+          {/* Subtasks */}
+          <div className="space-y-2 pt-1 border-t border-[#1f2228]">
+            <label className="text-[10px] font-mono uppercase text-zinc-400 flex items-center gap-1">
+              <Layers className="w-3 h-3 text-zinc-400" />
+              Subtasks Checklist
+            </label>
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Add sub-step..."
+                placeholder="Add subtask step..."
                 value={newSubtaskInput}
                 onChange={(e) => setNewSubtaskInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -260,31 +262,32 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
                     handleAddSubtaskDraft();
                   }
                 }}
-                className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+                className="flex-1 rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none min-h-[38px]"
               />
               <button
                 type="button"
                 onClick={handleAddSubtaskDraft}
-                className="rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 text-xs font-medium"
+                className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-1.5 text-xs font-semibold"
               >
-                Add Subtask
+                Add
               </button>
             </div>
+
             {newSubtasks.length > 0 && (
-              <div className="mt-2 space-y-1">
+              <ul className="space-y-1 pt-1">
                 {newSubtasks.map((st, i) => (
-                  <div key={i} className="flex items-center justify-between rounded-md bg-slate-900/60 px-2.5 py-1 text-xs text-slate-300">
-                    <span>• {st}</span>
+                  <li key={i} className="flex items-center justify-between rounded-md bg-[#14161a] px-2.5 py-1 text-xs text-zinc-300">
+                    <span>{st}</span>
                     <button
                       type="button"
-                      onClick={() => setNewSubtasks((prev) => prev.filter((_, idx) => idx !== i))}
-                      className="text-slate-500 hover:text-rose-400"
+                      onClick={() => setNewSubtasks(newSubtasks.filter((_, idx) => idx !== i))}
+                      className="text-zinc-500 hover:text-rose-400"
                     >
                       ×
                     </button>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
 
@@ -292,13 +295,13 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 text-xs font-semibold shadow-sm"
+              className="rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-4 py-1.5 text-xs shadow-sm transition"
             >
               Save Action Item
             </button>
@@ -307,138 +310,169 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
       )}
 
       {/* Task List */}
-      <div className="mt-4 space-y-2.5">
+      <div className="mt-3.5 space-y-2">
         {filteredTasks.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-800 p-8 text-center">
-            <CheckCircle2 className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-slate-300">No tasks in this view</p>
-            <p className="text-xs text-slate-500 mt-1">
-              Add a new task or adjust your domain and status filters.
+          <div className="rounded-xl border border-dashed border-[#24282f] p-8 text-center">
+            <CheckCircle2 className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
+            <p className="text-sm font-medium text-zinc-300">No action items found</p>
+            <p className="text-xs text-zinc-500 mt-1">
+              Add a new task above or adjust your active filters.
             </p>
           </div>
         ) : (
           filteredTasks.map((task) => {
             const isCompleted = task.status === 'completed';
-            const domainMeta = DOMAIN_META[task.domain] || DOMAIN_META.work;
-            const priorityMeta = PRIORITY_META[task.priority] || PRIORITY_META.medium;
-            const isExpanded = !!expandedTaskIds[task.id];
-            const completedSubtasks = task.subtasks.filter((s) => s.completed).length;
+            const domainMeta = DOMAIN_META[task.domain];
+            const priorityMeta = PRIORITY_META[task.priority];
+            const isExpanded = expandedTaskIds[task.id];
+            const completedSubtasks = task.subtasks.filter((st) => st.completed).length;
 
             return (
               <div
                 key={task.id}
                 id={`task-item-${task.id}`}
-                className={`group relative rounded-xl border p-3.5 transition-all duration-200 ${
+                className={`group rounded-xl border transition p-3 sm:p-3.5 ${
                   isCompleted
-                    ? 'border-slate-800/60 bg-slate-950/30 opacity-70'
-                    : 'border-slate-800 bg-slate-950/80 hover:border-slate-700 hover:shadow-md'
+                    ? 'border-[#1e2227] bg-[#0d0e10]/60 opacity-65'
+                    : 'border-[#24282f] bg-[#16181d] hover:border-[#2e333b]'
                 }`}
               >
                 <div className="flex items-start gap-3">
-                  {/* Status Toggle Checkbox */}
+                  {/* Large Touch Target Checkbox */}
                   <button
                     onClick={() => onToggleStatus(task.id)}
-                    className={`mt-0.5 rounded-lg p-0.5 transition active:scale-90 ${
-                      isCompleted ? 'text-emerald-400' : 'text-slate-500 hover:text-indigo-400'
-                    }`}
-                    title={isCompleted ? 'Mark incomplete' : 'Mark completed'}
+                    className="mt-0.5 flex h-7 w-7 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-lg border transition cursor-pointer min-h-[36px] min-w-[36px] -ml-1 -mt-1 sm:m-0"
+                    style={{
+                      borderColor: isCompleted ? '#10b981' : '#3f444e',
+                      backgroundColor: isCompleted ? '#064e3b' : 'transparent',
+                    }}
+                    title={isCompleted ? 'Mark uncompleted' : 'Mark completed'}
                   >
                     {isCompleted ? (
-                      <CheckCircle2 className="w-5 h-5 fill-emerald-500/20" />
+                      <Check className="w-4 h-4 text-emerald-300 stroke-[3]" />
                     ) : (
-                      <Circle className="w-5 h-5" />
+                      <Circle className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300" />
                     )}
                   </button>
 
                   {/* Task Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      {/* Life Domain Badge */}
                       <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${domainMeta.badgeClass}`}
+                        className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-mono border ${domainMeta.badgeClass}`}
                       >
+                        <span className={`h-1.5 w-1.5 rounded-full ${domainMeta.dotClass}`} />
                         {domainMeta.label}
                       </span>
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${priorityMeta.badgeClass}`}>
+
+                      {/* Priority Badge */}
+                      <span
+                        className={`rounded px-1.5 py-0.5 text-[10px] font-mono ${priorityMeta.badgeClass}`}
+                      >
                         {priorityMeta.label}
                       </span>
+
+                      {/* Due Date & Estimate */}
                       {task.dueDate && (
-                        <span className="flex items-center gap-1 text-[11px] text-slate-400">
-                          <Calendar className="w-3 h-3 text-slate-500" />
-                          {task.dueDate === today ? 'Today' : formatDatePretty(task.dueDate)}
+                        <span className="text-[10px] text-zinc-400 font-mono flex items-center gap-1">
+                          <Calendar className="w-3 h-3 text-zinc-500" />
+                          {task.dueDate === today ? (
+                            <span className="text-amber-400 font-semibold">Today</span>
+                          ) : (
+                            formatDatePretty(task.dueDate)
+                          )}
                         </span>
                       )}
+
                       {task.estimatedMinutes && (
-                        <span className="flex items-center gap-1 text-[11px] text-slate-400">
-                          <Clock className="w-3 h-3 text-slate-500" />
+                        <span className="text-[10px] text-zinc-500 font-mono flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
                           {task.estimatedMinutes}m
                         </span>
                       )}
                     </div>
 
-                    <h4
-                      className={`text-sm font-semibold tracking-tight transition ${
-                        isCompleted ? 'line-through text-slate-500' : 'text-slate-100'
+                    {/* Title */}
+                    <div
+                      className={`text-sm font-semibold tracking-tight text-zinc-100 ${
+                        isCompleted ? 'line-through text-zinc-500 font-normal' : ''
                       }`}
                     >
                       {task.title}
-                    </h4>
+                    </div>
 
+                    {/* Description if present */}
                     {task.description && (
-                      <p className="mt-1 text-xs text-slate-400 leading-relaxed line-clamp-2">
+                      <p className="mt-1 text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                         {task.description}
                       </p>
                     )}
 
-                    {/* Subtasks Summary / Expander */}
+                    {/* Subtasks summary bar */}
                     {task.subtasks.length > 0 && (
-                      <div className="mt-2.5">
+                      <div className="mt-2.5 flex items-center gap-3">
                         <button
                           onClick={() => toggleExpand(task.id)}
-                          className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400 hover:text-slate-200 transition"
+                          className="flex items-center gap-1 text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition py-1"
                         >
-                          <Layers className="w-3 h-3 text-indigo-400" />
+                          <Layers className="w-3.5 h-3.5 text-zinc-500" />
                           <span>
                             {completedSubtasks}/{task.subtasks.length} subtasks
                           </span>
                           {isExpanded ? (
-                            <ChevronUp className="w-3 h-3" />
+                            <ChevronUp className="w-3.5 h-3.5 text-zinc-500" />
                           ) : (
-                            <ChevronDown className="w-3 h-3" />
+                            <ChevronDown className="w-3.5 h-3.5 text-zinc-500" />
                           )}
                         </button>
 
-                        {isExpanded && (
-                          <div className="mt-2 space-y-1.5 pl-2 border-l-2 border-slate-800">
-                            {task.subtasks.map((st) => (
-                              <label
-                                key={st.id}
-                                className="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none py-0.5 hover:text-white"
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={st.completed}
-                                  onChange={() => onToggleSubtask(task.id, st.id)}
-                                  className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5"
-                                />
-                                <span className={st.completed ? 'line-through text-slate-500' : ''}>
-                                  {st.title}
-                                </span>
-                              </label>
-                            ))}
+                        <div className="w-24 h-1 rounded-full bg-zinc-800 overflow-hidden">
+                          <div
+                            className="h-full bg-emerald-500 transition-all duration-300"
+                            style={{
+                              width: `${(completedSubtasks / task.subtasks.length) * 100}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Expanded Subtasks List */}
+                    {isExpanded && task.subtasks.length > 0 && (
+                      <div className="mt-2 space-y-1 rounded-lg bg-[#0c0d10] p-2.5 border border-[#24282f]">
+                        {task.subtasks.map((st) => (
+                          <div
+                            key={st.id}
+                            onClick={() => onToggleSubtask(task.id, st.id)}
+                            className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer hover:text-zinc-100 py-1"
+                          >
+                            <div
+                              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                                st.completed
+                                  ? 'border-emerald-500 bg-emerald-950/60 text-emerald-400'
+                                  : 'border-zinc-700 bg-zinc-900'
+                              }`}
+                            >
+                              {st.completed && <Check className="w-3 h-3 stroke-[3]" />}
+                            </div>
+                            <span className={st.completed ? 'line-through text-zinc-500' : ''}>
+                              {st.title}
+                            </span>
                           </div>
-                        )}
+                        ))}
                       </div>
                     )}
                   </div>
 
                   {/* Actions (Delete) */}
-                  <div className="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                  <div className="flex items-center gap-1">
                     <button
                       onClick={() => onDeleteTask(task.id)}
-                      className="rounded-lg p-1.5 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition"
-                      title="Delete task"
+                      className="opacity-80 sm:opacity-0 group-hover:opacity-100 rounded-lg p-2 text-zinc-500 hover:bg-zinc-800 hover:text-rose-400 transition min-h-[38px] min-w-[38px] flex items-center justify-center"
+                      title="Delete action item"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>

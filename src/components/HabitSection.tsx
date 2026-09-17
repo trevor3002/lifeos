@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Habit, LifeDomain, HabitTimeOfDay } from '../types';
 import { DOMAIN_META } from '../utils/domainColors';
 import { getRecentDays, getTodayString } from '../utils/dateUtils';
+import confetti from 'canvas-confetti';
 import {
   Flame,
   Plus,
@@ -27,17 +28,18 @@ interface HabitSectionProps {
 const TIME_ICONS: Record<HabitTimeOfDay, React.ReactNode> = {
   morning: <Sun className="w-3 h-3 text-amber-400" />,
   afternoon: <Sunset className="w-3 h-3 text-orange-400" />,
-  evening: <Moon className="w-3 h-3 text-indigo-400" />,
-  anytime: <Sparkles className="w-3 h-3 text-teal-400" />,
+  evening: <Moon className="w-3 h-3 text-teal-400" />,
+  anytime: <Sparkles className="w-3 h-3 text-emerald-400" />,
 };
 
+// Pure architectural palette - zero purple
 const COLOR_OPTIONS = [
-  '#10b981', // emerald
-  '#6366f1', // indigo
-  '#06b6d4', // cyan
-  '#f59e0b', // amber
-  '#ec4899', // pink
-  '#8b5cf6', // purple
+  '#10b981', // forest emerald
+  '#d97706', // warm bronze
+  '#ea580c', // terracotta
+  '#14b8a6', // nordic teal
+  '#71717a', // slate graphite
+  '#f59e0b', // amber ochre
 ];
 
 export const HabitSection: React.FC<HabitSectionProps> = ({
@@ -88,36 +90,58 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
     setIsAdding(false);
   };
 
+  const handleHabitToggle = (habitId: string, dateStr: string) => {
+    onToggleHabitDate(habitId, dateStr);
+
+    // Check if toggling today's date completes all habits
+    if (dateStr === todayStr) {
+      const remainingBefore = habits.filter(
+        (h) => h.id !== habitId && !h.completions[todayStr]
+      ).length;
+      const willBeDone = !habits.find((h) => h.id === habitId)?.completions[todayStr];
+
+      if (remainingBefore === 0 && willBeDone) {
+        // Confetti celebration with warm amber & emerald particles
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 },
+          colors: ['#f59e0b', '#10b981', '#d97706', '#ffffff'],
+        });
+      }
+    }
+  };
+
   const todayCompletedCount = habits.filter((h) => h.completions[todayStr]).length;
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm">
+    <section className="rounded-2xl border border-[#24282f] bg-[#121316] p-4 sm:p-5 shadow-sm">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-[#1f2228]">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Flame className="w-5 h-5 text-teal-400" />
-              Habits &amp; Daily Rituals
+            <h3 className="text-base sm:text-lg font-bold text-zinc-100 flex items-center gap-2">
+              <Flame className="w-4 h-4 text-emerald-400" />
+              Daily Habits &amp; Rituals
             </h3>
-            <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-300">
-              {todayCompletedCount}/{habits.length} today
+            <span className="rounded-md bg-zinc-800 px-2 py-0.5 font-mono text-[11px] text-zinc-300">
+              {todayCompletedCount}/{habits.length} Today
             </span>
           </div>
-          <p className="text-xs text-slate-400">Consistent micro-actions compounding daily</p>
+          <p className="text-xs text-zinc-400">Consistent discipline tracked across rolling 7-day cycles</p>
         </div>
 
-        {/* Time of day filters & Add button */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs">
+        {/* Time of Day Filter & Add Button */}
+        <div className="flex items-center gap-2 justify-between sm:justify-end">
+          <div className="flex items-center rounded-lg bg-[#0c0d10] p-1 border border-[#24282f] text-xs">
             {(['all', 'morning', 'afternoon', 'evening'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTimeFilter(t)}
-                className={`rounded-md px-2 py-1 text-[11px] font-medium capitalize transition ${
+                className={`rounded-md px-2 py-1 text-[11px] font-medium capitalize transition min-h-[28px] ${
                   timeFilter === t
-                    ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-zinc-800 text-zinc-100 font-semibold shadow-sm border border-zinc-700'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
                 {t}
@@ -127,26 +151,28 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
 
           <button
             onClick={() => setIsAdding(!isAdding)}
-            className="flex items-center gap-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition active:scale-95"
+            className="flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 px-3 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 min-h-[36px]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5 stroke-[3]" />
             <span>New Habit</span>
           </button>
         </div>
       </div>
 
-      {/* Add Habit Form */}
+      {/* Add Habit Expandable Form */}
       {isAdding && (
         <form
           onSubmit={handleCreateHabit}
-          className="mt-4 rounded-xl border border-teal-500/30 bg-slate-950/80 p-4 space-y-3.5 animate-in fade-in"
+          className="mt-4 rounded-xl border border-amber-500/30 bg-[#0c0d10] p-4 space-y-3.5 animate-in fade-in"
         >
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-teal-400">Create Daily Habit</h4>
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-400">
+              New Habit Protocol
+            </h4>
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-zinc-500 hover:text-zinc-300"
             >
               Cancel
             </button>
@@ -156,21 +182,21 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
             <input
               type="text"
               required
-              placeholder="Habit name (e.g. 10m Morning Breathwork & Meditation)..."
+              placeholder="Habit name (e.g. 15m Morning Sun & Breathwork)..."
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-amber-500 focus:outline-none min-h-[44px]"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {/* Domain */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Domain</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Domain</label>
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value as LifeDomain)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-teal-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               >
                 <option value="health">Health</option>
                 <option value="work">Work</option>
@@ -182,11 +208,11 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
 
             {/* Time of Day */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Time of Day</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Time</label>
               <select
                 value={newTimeOfDay}
                 onChange={(e) => setNewTimeOfDay(e.target.value as HabitTimeOfDay)}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-teal-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               >
                 <option value="morning">Morning</option>
                 <option value="afternoon">Afternoon</option>
@@ -197,13 +223,13 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
 
             {/* Target Frequency */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Days / Week</label>
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Days / Week</label>
               <select
                 value={newTargetDays}
                 onChange={(e) => setNewTargetDays(Number(e.target.value))}
-                className="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:border-teal-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-2.5 py-1.5 text-xs text-zinc-200 focus:border-amber-500 focus:outline-none min-h-[38px]"
               >
-                <option value={7}>7 days (Every day)</option>
+                <option value={7}>7 days (Daily)</option>
                 <option value={5}>5 days (Weekdays)</option>
                 <option value={4}>4 days</option>
                 <option value={3}>3 days</option>
@@ -212,14 +238,14 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
 
             {/* Color Accent */}
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1">Color Theme</label>
-              <div className="flex items-center gap-1.5 pt-1">
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">Accent</label>
+              <div className="flex items-center gap-1.5 pt-1.5">
                 {COLOR_OPTIONS.map((c) => (
                   <button
                     key={c}
                     type="button"
                     onClick={() => setNewColor(c)}
-                    className={`h-6 w-6 rounded-full border-2 transition ${
+                    className={`h-5 w-5 rounded-full border-2 transition ${
                       newColor === c ? 'border-white scale-110' : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                     style={{ backgroundColor: c }}
@@ -233,48 +259,48 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
             <button
               type="button"
               onClick={() => setIsAdding(false)}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-teal-600 hover:bg-teal-500 text-white px-4 py-1.5 text-xs font-semibold shadow-sm"
+              className="rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-4 py-1.5 text-xs shadow-sm"
             >
-              Save Habit
+              Save Protocol
             </button>
           </div>
         </form>
       )}
 
       {/* Habits Grid */}
-      <div className="mt-4 space-y-3">
+      <div className="mt-3.5 space-y-2">
         {/* Days Header */}
-        <div className="flex items-center justify-between px-3 text-slate-400 text-xs font-semibold">
-          <span>Habit Details</span>
+        <div className="flex items-center justify-between px-2 text-zinc-500 text-xs font-mono">
+          <span className="text-[11px] uppercase tracking-wider">Protocol</span>
           <div className="flex items-center gap-1 sm:gap-2">
             {recentDays.map((day) => (
               <div
                 key={day.dateStr}
                 className={`w-7 sm:w-8 text-center text-[10px] sm:text-xs uppercase font-medium ${
-                  day.isToday ? 'text-teal-400 font-bold' : 'text-slate-500'
+                  day.isToday ? 'text-amber-400 font-bold' : 'text-zinc-500'
                 }`}
               >
                 {day.dayLabel}
               </div>
             ))}
-            <div className="w-16 text-right text-[10px] uppercase text-slate-500 hidden sm:block">
+            <div className="w-14 text-right text-[10px] uppercase text-zinc-500 hidden sm:block">
               Streak
             </div>
           </div>
         </div>
 
         {filteredHabits.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-800 p-8 text-center">
-            <Flame className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-slate-300">No habits in this view</p>
-            <p className="text-xs text-slate-500 mt-1">
-              Build a new habit to start your daily consistency streak.
+          <div className="rounded-xl border border-dashed border-[#24282f] p-8 text-center">
+            <Flame className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
+            <p className="text-sm font-medium text-zinc-300">No habits found</p>
+            <p className="text-xs text-zinc-500 mt-1">
+              Add a new routine above to build your daily momentum.
             </p>
           </div>
         ) : (
@@ -286,32 +312,32 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
               <div
                 key={habit.id}
                 id={`habit-row-${habit.id}`}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-950/80 p-3 hover:border-slate-700 transition"
+                className="group flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-[#24282f] bg-[#16181d] p-3 hover:border-[#2e333b] transition"
               >
                 {/* Left: Info */}
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className="h-3 w-3 rounded-full shrink-0 shadow-sm"
+                    className="h-2.5 w-2.5 rounded-full shrink-0"
                     style={{ backgroundColor: habit.color }}
                   />
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <h4 className="text-sm font-semibold text-white tracking-tight truncate">
+                      <h4 className="text-sm font-semibold text-zinc-100 tracking-tight truncate">
                         {habit.name}
                       </h4>
-                      <span className="flex items-center gap-1 text-[10px] text-slate-400 capitalize">
+                      <span className="flex items-center gap-1 text-[10px] text-zinc-400 capitalize font-mono">
                         {TIME_ICONS[habit.timeOfDay]}
                         <span className="hidden xs:inline">{habit.timeOfDay}</span>
                       </span>
-                      <span className={`text-[9px] px-1.5 py-0.2 rounded border ${domainMeta.badgeClass}`}>
+                      <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono border ${domainMeta.badgeClass}`}>
                         {domainMeta.label}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Right: 7-Day interactive dots & Streak */}
-                <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2">
+                {/* Right: 7-Day interactive touch targets & Streak */}
+                <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2 pt-1 sm:pt-0">
                   <div className="flex items-center gap-1 sm:gap-2">
                     {recentDays.map((day) => {
                       const completed = !!habit.completions[day.dateStr];
@@ -320,34 +346,34 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
                       return (
                         <button
                           key={day.dateStr}
-                          onClick={() => onToggleHabitDate(habit.id, day.dateStr)}
-                          className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-lg border transition-all active:scale-90 ${
+                          onClick={() => handleHabitToggle(habit.id, day.dateStr)}
+                          className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-all active:scale-90 min-h-[34px] min-w-[34px] cursor-pointer ${
                             completed
-                              ? 'border-teal-500/50 bg-teal-500/20 text-teal-300 shadow-sm shadow-teal-500/20'
+                              ? 'border-emerald-500/50 bg-emerald-950/60 text-emerald-300'
                               : isToday
-                              ? 'border-slate-700 bg-slate-900 text-slate-600 hover:border-teal-500/40 hover:text-teal-400'
-                              : 'border-slate-800/80 bg-slate-950 text-slate-700 hover:border-slate-700'
+                              ? 'border-zinc-700 bg-[#0c0d10] text-zinc-600 hover:border-amber-500/40 hover:text-amber-400'
+                              : 'border-[#24282f] bg-[#0c0d10]/50 text-zinc-700 hover:border-zinc-600'
                           }`}
                           title={`${habit.name} on ${day.dateStr}: ${completed ? 'Completed' : 'Pending'}`}
                         >
                           {completed ? (
-                            <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" />
+                            <Check className="w-4 h-4 stroke-[3]" />
                           ) : (
-                            <span className="text-[9px] text-slate-600">•</span>
+                            <span className="text-[10px] text-zinc-600">•</span>
                           )}
                         </button>
                       );
                     })}
                   </div>
 
-                  {/* Streak and Record */}
-                  <div className="flex items-center gap-2 pl-2">
-                    <div className="w-16 text-right">
-                      <div className="flex items-center justify-end gap-1 text-xs font-bold text-amber-400">
+                  {/* Streak & Delete */}
+                  <div className="flex items-center gap-1.5 pl-1.5">
+                    <div className="w-14 text-right">
+                      <div className="flex items-center justify-end gap-1 text-xs font-bold text-amber-400 font-mono">
                         <Flame className={`w-3.5 h-3.5 ${isDoneToday ? 'fill-amber-400' : ''}`} />
                         <span>{habit.currentStreak}d</span>
                       </div>
-                      <div className="flex items-center justify-end gap-0.5 text-[10px] text-slate-500">
+                      <div className="flex items-center justify-end gap-0.5 text-[10px] text-zinc-500 font-mono">
                         <Trophy className="w-2.5 h-2.5" />
                         <span>{habit.bestStreak}d</span>
                       </div>
@@ -355,7 +381,7 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
 
                     <button
                       onClick={() => onDeleteHabit(habit.id)}
-                      className="opacity-0 group-hover:opacity-100 rounded-lg p-1.5 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition"
+                      className="opacity-80 sm:opacity-0 group-hover:opacity-100 rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-800 hover:text-rose-400 transition min-h-[34px] min-w-[34px] flex items-center justify-center"
                       title="Delete habit"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

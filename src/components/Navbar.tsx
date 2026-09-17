@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   dailyScore,
 }) => {
   const tabs: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { id: 'dashboard', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'tasks', label: 'Tasks', icon: <CheckSquare className="w-4 h-4" /> },
     { id: 'habits', label: 'Habits', icon: <Flame className="w-4 h-4" /> },
     { id: 'journal', label: 'Journal', icon: <BookOpen className="w-4 h-4" /> },
@@ -55,88 +55,168 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/85 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 via-teal-500 to-emerald-400 p-[1.5px] shadow-sm">
-              <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-slate-950">
-                <span className="text-sm font-black tracking-tight text-white">OS</span>
+    <>
+      {/* Top Header */}
+      <header className="sticky top-0 z-30 border-b border-[#24282f] bg-[#0c0d10]/95 backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-14 sm:h-16 items-center justify-between gap-3">
+            {/* Brand Logo */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-zinc-900 border border-[#2e333b] shadow-inner">
+                <span className="font-mono text-xs font-bold tracking-wider text-amber-400">OS</span>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-sm sm:text-base font-bold tracking-tight text-zinc-100">Life OS</span>
+                  <span className="font-mono text-[10px] font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-1.5 py-0.5 rounded">
+                    {dailyScore}%
+                  </span>
+                </div>
+                <p className="text-[10px] text-zinc-500 hidden sm:block font-mono uppercase tracking-wider">
+                  Personal Operating System
+                </p>
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-base font-bold tracking-tight text-white">Life OS</h1>
-                <span className="rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/20">
-                  {dailyScore}% Score
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">Tasks • Habits • Journal</p>
+
+            {/* Desktop Navigation Tabs */}
+            <nav className="hidden md:flex items-center gap-1 rounded-xl border border-[#24282f] bg-[#121316] p-1">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    id={`nav-tab-${tab.id}`}
+                    onClick={() => {
+                      if (tab.id === 'review') {
+                        onOpenDailyReview();
+                      } else {
+                        setActiveTab(tab.id);
+                      }
+                    }}
+                    className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                      isActive
+                        ? 'bg-zinc-800 text-zinc-100 font-semibold shadow-sm border border-zinc-700'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40'
+                    }`}
+                  >
+                    {tab.icon}
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Top Right Actions */}
+            <div className="flex items-center gap-2">
+              {/* Quick Add Button (Desktop) */}
+              <button
+                id="quick-add-btn"
+                onClick={onOpenQuickAdd}
+                className="hidden sm:flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 py-1.5 text-xs shadow-sm transition active:scale-95 cursor-pointer"
+                title="Quick capture (shortcut: C)"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                <span>Capture</span>
+              </button>
+
+              {/* PWA Install Button */}
+              <PWAInstallButton />
+
+              {/* Data Management Backup/Restore */}
+              <button
+                id="data-backup-btn"
+                onClick={onOpenDataModal}
+                className="flex items-center justify-center rounded-lg border border-[#24282f] bg-[#121316] p-2 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition active:scale-95"
+                title="Backup, Import & Export Data"
+              >
+                <Database className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
-          {/* Navigation Tabs (Desktop) */}
-          <nav className="hidden md:flex items-center gap-1 rounded-xl border border-slate-800 bg-slate-900/60 p-1">
-            {tabs.map((tab) => {
-              const isActive = activeTab === tab.id;
-              return (
+          {/* Subheader: Domain Filter & Search */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 py-2.5 border-t border-[#1e2227] text-xs">
+            {/* Life Domain Filter Chips (Horizontal Touch Scroll on Mobile) */}
+            <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto no-scrollbar py-0.5">
+              {domains.map((domain) => {
+                const isSelected = selectedDomain === domain.id;
+                return (
+                  <button
+                    key={domain.id}
+                    id={`domain-filter-${domain.id}`}
+                    onClick={() => setSelectedDomain(domain.id)}
+                    className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition whitespace-nowrap min-h-[32px] flex items-center ${
+                      isSelected
+                        ? 'bg-amber-500/15 text-amber-300 border border-amber-500/40 font-semibold'
+                        : 'bg-[#14161a] text-zinc-400 hover:text-zinc-200 border border-[#24282f]'
+                    }`}
+                  >
+                    {domain.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Search Input */}
+            <div className="relative w-full sm:w-60 shrink-0">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-500" />
+              <input
+                id="global-search-input"
+                type="text"
+                placeholder="Filter tasks, habits, notes..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-md border border-[#24282f] bg-[#121316] pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none transition min-h-[34px]"
+              />
+              {searchQuery && (
                 <button
-                  key={tab.id}
-                  id={`nav-tab-${tab.id}`}
-                  onClick={() => {
-                    if (tab.id === 'review') {
-                      onOpenDailyReview();
-                    } else {
-                      setActiveTab(tab.id);
-                    }
-                  }}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                    isActive
-                      ? 'bg-indigo-600 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                  }`}
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-zinc-500 hover:text-zinc-300"
                 >
-                  {tab.icon}
-                  <span>{tab.label}</span>
+                  esc
                 </button>
-              );
-            })}
-          </nav>
-
-          {/* Right Action Tools */}
-          <div className="flex items-center gap-2">
-            {/* Quick Add Button */}
-            <button
-              id="quick-add-btn"
-              onClick={onOpenQuickAdd}
-              className="flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 text-xs font-semibold shadow-md shadow-indigo-600/20 transition active:scale-95 cursor-pointer"
-              title="Quick capture (Task, Habit, or Journal)"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">Capture</span>
-            </button>
-
-            {/* PWA Install Button */}
-            <PWAInstallButton />
-
-            {/* Data Management Backup/Restore */}
-            <button
-              id="data-backup-btn"
-              onClick={onOpenDataModal}
-              className="flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition active:scale-95"
-              title="Backup, Import & Export Data"
-            >
-              <Database className="w-4 h-4" />
-            </button>
+              )}
+            </div>
           </div>
         </div>
+      </header>
 
-        {/* Secondary Sub-bar: Domain Filters & Search */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-2.5 border-t border-slate-900 text-xs">
-          {/* Mobile Navigation Tabs */}
-          <div className="flex md:hidden items-center justify-between w-full overflow-x-auto pb-1 gap-1">
-            {tabs.map((tab) => (
+      {/* Mobile-First Bottom Navigation Dock (Fixed Thumb Zone) */}
+      <nav
+        id="mobile-bottom-dock"
+        className="fixed bottom-0 left-0 right-0 z-40 md:hidden border-t border-[#24282f] bg-[#0c0d10]/95 backdrop-blur-xl px-2 py-1.5 shadow-2xl safe-area-inset-bottom"
+      >
+        <div className="flex items-center justify-around">
+          {tabs.slice(0, 2).map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition ${
+                  isActive ? 'text-amber-400 font-bold' : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <div className="p-1">{tab.icon}</div>
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+
+          {/* Center Elevated Quick Add Action FAB */}
+          <div className="flex items-center justify-center -mt-5">
+            <button
+              onClick={onOpenQuickAdd}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-zinc-950 shadow-lg shadow-amber-500/20 active:scale-95 transition border-2 border-[#0c0d10]"
+              title="Quick Capture"
+            >
+              <Plus className="w-5 h-5 stroke-[3]" />
+            </button>
+          </div>
+
+          {tabs.slice(2).map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
               <button
                 key={tab.id}
                 onClick={() => {
@@ -146,61 +226,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setActiveTab(tab.id);
                   }
                 }}
-                className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-medium ${
-                  activeTab === tab.id
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-slate-400 bg-slate-900 border border-slate-800'
+                className={`flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-[10px] font-medium transition ${
+                  isActive ? 'text-amber-400 font-bold' : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
-                {tab.icon}
+                <div className="p-1">{tab.icon}</div>
                 <span>{tab.label}</span>
               </button>
-            ))}
-          </div>
-
-          {/* Life Domain Chips */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto no-scrollbar">
-            {domains.map((domain) => {
-              const isSelected = selectedDomain === domain.id;
-              return (
-                <button
-                  key={domain.id}
-                  id={`domain-filter-${domain.id}`}
-                  onClick={() => setSelectedDomain(domain.id)}
-                  className={`rounded-lg px-2.5 py-1 text-[11px] font-medium transition whitespace-nowrap ${
-                    isSelected
-                      ? 'bg-slate-200 text-slate-950 font-semibold shadow-sm'
-                      : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800/80 hover:border-slate-700'
-                  }`}
-                >
-                  {domain.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search bar */}
-          <div className="relative w-full sm:w-64 shrink-0">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
-            <input
-              id="global-search-input"
-              type="text"
-              placeholder="Search tasks, habits, reflections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-slate-800 bg-slate-900/90 pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 hover:text-slate-300"
-              >
-                esc
-              </button>
-            )}
-          </div>
+            );
+          })}
         </div>
-      </div>
-    </header>
+      </nav>
+    </>
   );
 };

@@ -38,7 +38,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
   const [isWriting, setIsWriting] = useState(false);
   const [selectedTagFilter, setSelectedTagFilter] = useState<JournalTag | 'all'>('all');
 
-  // New journal entry form state
+  // Form state
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [mood, setMood] = useState<JournalMood>('focused');
@@ -66,8 +66,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
     setAttachedTasks(taskTitles);
     setAttachedHabitsCount(todayHabitsCompleted.length);
 
-    // Also enrich content with a brief summary block if empty or append
-    const winsSnippet = `\n\n### Today's Completed Actions:\n${
+    const winsSnippet = `\n\n### Daily Wins Log:\n${
       taskTitles.length > 0
         ? taskTitles.map((t) => `- [x] ${t}`).join('\n')
         : '- (No tasks marked completed yet)'
@@ -103,7 +102,6 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
       includedHabitsCount: attachedHabitsCount > 0 ? attachedHabitsCount : undefined,
     });
 
-    // Reset
     setTitle('');
     setContent('');
     setGratitudeInputs(['', '', '']);
@@ -113,43 +111,43 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
   };
 
   return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-sm">
+    <section className="rounded-2xl border border-[#24282f] bg-[#121316] p-4 sm:p-5 shadow-sm">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-[#1f2228]">
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-pink-400" />
+            <h3 className="text-base sm:text-lg font-bold text-zinc-100 flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-amber-400" />
               Mindful Journal &amp; Logs
             </h3>
-            <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-300">
-              {filteredJournals.length} entries
+            <span className="rounded-md bg-zinc-800 px-2 py-0.5 font-mono text-[11px] text-zinc-300">
+              {filteredJournals.length}
             </span>
           </div>
-          <p className="text-xs text-slate-400">Deep reflections, daily gratitude, and win synthesis</p>
+          <p className="text-xs text-zinc-400">Deep daily reflections, gratitude logs, and win synthesis</p>
         </div>
 
-        {/* Tag Filters & New Entry Button */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs overflow-x-auto max-w-xs no-scrollbar">
+        {/* Filters & Write Action Button */}
+        <div className="flex items-center gap-2 justify-between sm:justify-end">
+          <div className="flex items-center rounded-lg bg-[#0c0d10] p-1 border border-[#24282f] text-xs overflow-x-auto max-w-[200px] sm:max-w-xs no-scrollbar">
             <button
               onClick={() => setSelectedTagFilter('all')}
-              className={`rounded-md px-2 py-1 text-[11px] font-medium capitalize transition whitespace-nowrap ${
+              className={`rounded-md px-2 py-1 text-[11px] font-medium capitalize transition whitespace-nowrap min-h-[28px] ${
                 selectedTagFilter === 'all'
-                  ? 'bg-pink-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-zinc-800 text-zinc-100 font-semibold shadow-sm border border-zinc-700'
+                  : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               All
             </button>
-            {ALL_TAGS.slice(0, 4).map((tag) => (
+            {ALL_TAGS.slice(0, 3).map((tag) => (
               <button
                 key={tag}
                 onClick={() => setSelectedTagFilter(tag)}
-                className={`rounded-md px-2 py-1 text-[11px] font-medium capitalize transition whitespace-nowrap ${
+                className={`rounded-md px-2 py-1 text-[11px] font-medium capitalize transition whitespace-nowrap min-h-[28px] ${
                   selectedTagFilter === tag
-                    ? 'bg-pink-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-zinc-800 text-zinc-100 font-semibold shadow-sm border border-zinc-700'
+                    : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
                 {tag}
@@ -159,68 +157,67 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
 
           <button
             onClick={() => setIsWriting(!isWriting)}
-            className="flex items-center gap-1.5 rounded-lg bg-pink-600 hover:bg-pink-500 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition active:scale-95 whitespace-nowrap"
+            className="flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 px-3 py-1.5 text-xs font-bold shadow-sm transition active:scale-95 whitespace-nowrap min-h-[36px]"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5 stroke-[3]" />
             <span>Write Entry</span>
           </button>
         </div>
       </div>
 
-      {/* Write Journal Form */}
+      {/* Form */}
       {isWriting && (
         <form
           onSubmit={handleCreateEntry}
-          className="mt-4 rounded-xl border border-pink-500/30 bg-slate-950/90 p-4 sm:p-5 space-y-4 animate-in fade-in"
+          className="mt-4 rounded-xl border border-amber-500/30 bg-[#0c0d10] p-4 sm:p-5 space-y-4 animate-in fade-in"
         >
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-pink-400">
-              New Daily Reflection — {formatDatePretty(today)}
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-400">
+              New Reflection — {formatDatePretty(today)}
             </h4>
             <button
               type="button"
               onClick={() => setIsWriting(false)}
-              className="text-xs text-slate-500 hover:text-slate-300"
+              className="text-xs text-zinc-500 hover:text-zinc-300"
             >
               Cancel
             </button>
           </div>
 
           {/* Quick Cross-Pillar Integration Button */}
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-indigo-950/40 border border-indigo-500/30 p-2.5 text-xs">
-            <div className="flex items-center gap-2 text-indigo-200">
-              <Sparkles className="w-4 h-4 text-indigo-400 shrink-0" />
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[#16181d] border border-[#2e333b] p-2.5 text-xs">
+            <div className="flex items-center gap-2 text-zinc-300">
+              <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
               <span>
-                Today you completed <strong>{todayTasksCompleted.length} tasks</strong> and{' '}
-                <strong>{todayHabitsCompleted.length} habits</strong>.
+                Today: <strong className="text-zinc-100">{todayTasksCompleted.length} tasks</strong> &amp;{' '}
+                <strong className="text-zinc-100">{todayHabitsCompleted.length} habits</strong> completed.
               </span>
             </div>
             <button
               type="button"
               onClick={handlePullDailyWins}
-              className="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 text-[11px] font-medium transition active:scale-95"
+              className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 px-2.5 py-1 text-[11px] font-medium transition active:scale-95"
             >
               Include Today's Achievements
             </button>
           </div>
 
-          {/* Title Input */}
+          {/* Title */}
           <div>
             <input
               type="text"
-              placeholder="Entry Title (e.g. Breakthrough on project architecture and calm evening)..."
+              placeholder="Entry Title (e.g. Breakthrough on system architecture & mindful evening)..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-pink-500 focus:outline-none font-semibold"
+              className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-amber-500 focus:outline-none font-semibold min-h-[44px]"
             />
           </div>
 
           {/* Mood & Energy Bar */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Mood selector */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-[11px] font-medium text-slate-400 mb-1.5">
-                Current Mood State
+              <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1.5">
+                Mental State
               </label>
               <div className="grid grid-cols-5 gap-1.5">
                 {(['energized', 'calm', 'focused', 'reflective', 'tired'] as JournalMood[]).map((m) => {
@@ -231,10 +228,10 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                       key={m}
                       type="button"
                       onClick={() => setMood(m)}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg border text-center transition ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg border text-center transition min-h-[44px] ${
                         isSelected
-                          ? `${meta.colorClass} border-current font-bold scale-102`
-                          : 'border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                          ? `${meta.colorClass} border-current font-bold`
+                          : 'border-[#24282f] bg-[#14161a] text-zinc-400 hover:text-zinc-200'
                       }`}
                     >
                       <span className="text-base">{meta.icon}</span>
@@ -245,22 +242,21 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               </div>
             </div>
 
-            {/* Energy Level 1-5 */}
             <div>
-              <div className="flex justify-between text-[11px] font-medium text-slate-400 mb-1.5">
-                <span>Energy Vitality Level</span>
-                <span className="text-pink-400 font-bold">{energyLevel} / 5</span>
+              <div className="flex justify-between text-[10px] font-mono uppercase text-zinc-400 mb-1.5">
+                <span>Vitality Rating</span>
+                <span className="text-amber-400 font-bold">{energyLevel} / 5</span>
               </div>
-              <div className="flex items-center gap-2 pt-2">
+              <div className="flex items-center gap-1.5 pt-1">
                 {[1, 2, 3, 4, 5].map((level) => (
                   <button
                     key={level}
                     type="button"
                     onClick={() => setEnergyLevel(level)}
-                    className={`flex-1 h-8 rounded-lg border font-bold text-xs flex items-center justify-center gap-1 transition ${
+                    className={`flex-1 h-9 rounded-lg border font-mono font-bold text-xs flex items-center justify-center gap-1 transition ${
                       energyLevel >= level
-                        ? 'bg-pink-500/20 border-pink-500/50 text-pink-300'
-                        : 'bg-slate-900 border-slate-800 text-slate-600 hover:text-slate-400'
+                        ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+                        : 'bg-[#14161a] border-[#24282f] text-zinc-600 hover:text-zinc-400'
                     }`}
                   >
                     <Zap className="w-3 h-3" />
@@ -273,7 +269,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
 
           {/* Tags */}
           <div>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1.5 flex items-center gap-1">
+            <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1.5 flex items-center gap-1">
               <Tag className="w-3 h-3" />
               Tags
             </label>
@@ -285,10 +281,10 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                     key={t}
                     type="button"
                     onClick={() => handleToggleTag(t)}
-                    className={`rounded-md px-2.5 py-1 text-xs capitalize transition ${
+                    className={`rounded-md px-2.5 py-1 text-xs capitalize transition min-h-[30px] ${
                       active
-                        ? 'bg-pink-500 text-white font-medium shadow-sm'
-                        : 'bg-slate-900 border border-slate-800 text-slate-400 hover:border-slate-700'
+                        ? 'bg-amber-500 text-zinc-950 font-bold shadow-sm'
+                        : 'bg-[#14161a] border border-[#24282f] text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     #{t}
@@ -298,10 +294,10 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
             </div>
           </div>
 
-          {/* Main Content Area */}
+          {/* Content */}
           <div>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">
-              Reflection &amp; Thoughts
+            <label className="block text-[10px] font-mono uppercase text-zinc-400 mb-1">
+              Daily Reflection
             </label>
             <textarea
               required
@@ -309,15 +305,15 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               placeholder="What went well today? What was a key insight or learning? What would you adjust tomorrow?..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full rounded-lg border border-slate-700 bg-slate-900 p-3 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:border-pink-500 focus:outline-none leading-relaxed"
+              className="w-full rounded-lg border border-[#2e333b] bg-[#14161a] p-3 text-xs sm:text-sm text-zinc-200 placeholder-zinc-500 focus:border-amber-500 focus:outline-none leading-relaxed"
             />
           </div>
 
           {/* 3 Gratitudes */}
-          <div className="space-y-2 rounded-xl bg-slate-900/40 p-3 border border-slate-800/80">
-            <label className="text-[11px] font-semibold text-slate-300 flex items-center gap-1.5">
-              <Heart className="w-3.5 h-3.5 text-pink-400" />
-              Three Daily Gratitudes (Optional)
+          <div className="space-y-2 rounded-xl bg-[#14161a] p-3 border border-[#24282f]">
+            <label className="text-[10px] font-mono uppercase text-zinc-300 flex items-center gap-1.5">
+              <Heart className="w-3.5 h-3.5 text-rose-400" />
+              Daily Gratitude Anchor
             </label>
             {gratitudeInputs.map((val, idx) => (
               <input
@@ -330,7 +326,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                   updated[idx] = e.target.value;
                   setGratitudeInputs(updated);
                 }}
-                className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:border-pink-500 focus:outline-none"
+                className="w-full rounded-lg border border-[#24282f] bg-[#0c0d10] px-3 py-1.5 text-xs text-zinc-200 placeholder-zinc-600 focus:border-amber-500 focus:outline-none min-h-[36px]"
               />
             ))}
           </div>
@@ -339,27 +335,27 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
             <button
               type="button"
               onClick={() => setIsWriting(false)}
-              className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-slate-200"
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="rounded-lg bg-pink-600 hover:bg-pink-500 text-white px-4 py-1.5 text-xs font-semibold shadow-sm"
+              className="rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-4 py-1.5 text-xs shadow-sm"
             >
-              Save Daily Reflection
+              Save Reflection
             </button>
           </div>
         </form>
       )}
 
       {/* Entries List */}
-      <div className="mt-4 space-y-3.5">
+      <div className="mt-3.5 space-y-3">
         {filteredJournals.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-slate-800 p-8 text-center">
-            <BookOpen className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-slate-300">No journal reflections found</p>
-            <p className="text-xs text-slate-500 mt-1">
+          <div className="rounded-xl border border-dashed border-[#24282f] p-8 text-center">
+            <BookOpen className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
+            <p className="text-sm font-medium text-zinc-300">No reflections found</p>
+            <p className="text-xs text-zinc-500 mt-1">
               Capture your first daily reflection or gratitude log above.
             </p>
           </div>
@@ -371,54 +367,54 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
               <article
                 key={entry.id}
                 id={`journal-card-${entry.id}`}
-                className="group rounded-xl border border-slate-800 bg-slate-950/80 p-4 hover:border-slate-700 transition space-y-3"
+                className="group rounded-xl border border-[#24282f] bg-[#16181d] p-3.5 sm:p-4 hover:border-[#2e333b] transition space-y-3"
               >
-                {/* Header info */}
+                {/* Header */}
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className="text-xs font-bold text-slate-200">
+                    <div className="flex items-center gap-2 flex-wrap mb-1 font-mono">
+                      <span className="text-xs font-bold text-zinc-300">
                         {formatDatePretty(entry.date)}
                       </span>
                       <span
-                        className={`text-[10px] px-2 py-0.5 rounded-full border flex items-center gap-1 ${moodMeta.colorClass}`}
+                        className={`text-[10px] px-2 py-0.5 rounded border flex items-center gap-1 ${moodMeta.colorClass}`}
                       >
                         <span>{moodMeta.icon}</span>
                         <span>{moodMeta.label}</span>
                       </span>
-                      <span className="text-[10px] text-slate-400 flex items-center gap-0.5 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                      <span className="text-[10px] text-zinc-400 flex items-center gap-0.5 bg-[#121316] px-1.5 py-0.5 rounded border border-[#24282f]">
                         <Zap className="w-2.5 h-2.5 text-amber-400" />
                         {entry.energyLevel}/5 Energy
                       </span>
                     </div>
 
-                    <h4 className="text-sm sm:text-base font-semibold text-white tracking-tight">
+                    <h4 className="text-sm sm:text-base font-semibold text-zinc-100 tracking-tight">
                       {entry.title}
                     </h4>
                   </div>
 
                   <button
                     onClick={() => onDeleteJournal(entry.id)}
-                    className="opacity-0 group-hover:opacity-100 rounded-lg p-1.5 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition"
+                    className="opacity-80 sm:opacity-0 group-hover:opacity-100 rounded-lg p-2 text-zinc-500 hover:bg-zinc-800 hover:text-rose-400 transition min-h-[36px] min-w-[36px] flex items-center justify-center"
                     title="Delete reflection"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* Body Content */}
-                <div className="text-xs sm:text-sm text-slate-300 leading-relaxed whitespace-pre-line font-normal">
+                <div className="text-xs sm:text-sm text-zinc-300 leading-relaxed whitespace-pre-line font-normal">
                   {entry.content}
                 </div>
 
-                {/* Gratitude items if present */}
+                {/* Gratitude items */}
                 {entry.gratitude && entry.gratitude.length > 0 && (
-                  <div className="rounded-lg bg-pink-950/20 border border-pink-500/20 p-2.5 text-xs text-pink-200 space-y-1">
-                    <div className="font-semibold text-[11px] text-pink-400 flex items-center gap-1">
+                  <div className="rounded-lg bg-[#14161a] border border-[#24282f] p-2.5 text-xs text-zinc-300 space-y-1">
+                    <div className="font-mono text-[10px] uppercase text-rose-400 flex items-center gap-1 font-semibold">
                       <Heart className="w-3 h-3" />
                       Daily Gratitude:
                     </div>
-                    <ul className="list-disc list-inside space-y-0.5 text-slate-300 text-[11px]">
+                    <ul className="list-disc list-inside space-y-0.5 text-zinc-300 text-[11px]">
                       {entry.gratitude.map((g, i) => (
                         <li key={i}>{g}</li>
                       ))}
@@ -426,14 +422,14 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                   </div>
                 )}
 
-                {/* Integrated achievements banner */}
+                {/* Integrated achievements */}
                 {entry.includedTasks && entry.includedTasks.length > 0 && (
-                  <div className="flex items-center gap-2 text-[11px] text-indigo-300 bg-indigo-950/30 rounded-lg px-2.5 py-1.5 border border-indigo-500/20">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>Included {entry.includedTasks.length} completed tasks in reflection</span>
+                  <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-300 bg-[#121316] rounded-lg px-2.5 py-1.5 border border-[#24282f]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Included {entry.includedTasks.length} tasks in reflection</span>
                     {entry.includedHabitsCount && (
-                      <span className="flex items-center gap-1 text-teal-300 ml-2">
-                        <Flame className="w-3 h-3 text-teal-400" />
+                      <span className="flex items-center gap-1 text-amber-400 ml-2">
+                        <Flame className="w-3 h-3" />
                         {entry.includedHabitsCount} habits
                       </span>
                     )}
@@ -445,7 +441,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
                   {entry.tags.map((t) => (
                     <span
                       key={t}
-                      className="text-[10px] font-medium text-slate-400 bg-slate-900 border border-slate-800/80 px-2 py-0.5 rounded"
+                      className="text-[10px] font-mono font-medium text-zinc-400 bg-[#0c0d10] border border-[#24282f] px-2 py-0.5 rounded"
                     >
                       #{t}
                     </span>

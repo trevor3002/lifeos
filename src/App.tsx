@@ -57,7 +57,6 @@ export default function App() {
   // Global Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input or textarea
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
@@ -80,8 +79,8 @@ export default function App() {
   const todayCompletedHabitsList = habits.filter((h) => h.completions[today]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white">
-      {/* Top Sticky Navigation */}
+    <div className="min-h-screen bg-[#0c0d10] text-zinc-100 flex flex-col selection:bg-amber-500/30 selection:text-amber-200">
+      {/* Top Sticky Navigation & Mobile Header */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -95,9 +94,9 @@ export default function App() {
         dailyScore={dailyScore}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-6">
-        {/* Always display the Daily Overview Banner */}
+      {/* Main Content Area - pb-28 ensures bottom navigation dock never covers content on mobile */}
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-28 sm:pb-10">
+        {/* Daily Holistic Metric Banner */}
         <DailyOverviewBanner
           dailyScore={dailyScore}
           tasksCompleted={todayCompletedTasks.length}
@@ -111,11 +110,11 @@ export default function App() {
           }}
         />
 
-        {/* Tab 1: Unified Integrated Dashboard */}
+        {/* Tab 1: Integrated Life OS Dashboard */}
         {activeTab === 'dashboard' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left/Center Columns: Tasks and Habits */}
-            <div className="lg:col-span-7 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+            {/* Left/Center: Tasks & Habits */}
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <TaskSection
                 tasks={tasks}
                 onAddTask={addTask}
@@ -138,8 +137,8 @@ export default function App() {
               />
             </div>
 
-            {/* Right Column: Journal & Mindset */}
-            <div className="lg:col-span-5 space-y-6">
+            {/* Right: Mindful Journal & Logs */}
+            <div className="lg:col-span-5 space-y-5 sm:space-y-6">
               <JournalSection
                 journals={journals}
                 onAddJournal={addJournal}
@@ -200,21 +199,21 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer info & GitHub Pages / PWA status */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Life OS • Unified Tasks, Habits &amp; Daily Journal</span>
+      {/* Desktop Footer (Hidden on mobile to preserve screen real estate above dock) */}
+      <footer className="hidden sm:block border-t border-[#1f2228] bg-[#0c0d10] py-4 text-center text-xs text-zinc-500">
+        <div className="mx-auto max-w-7xl px-4 flex flex-row items-center justify-between gap-2">
+          <span>Life OS • Actionable Tasks, Sustained Habits &amp; Daily Reflections</span>
           <div className="flex items-center gap-3">
-            <span className="text-emerald-400/90 font-medium flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              PWA &amp; GitHub Pages Ready
+            <span className="text-emerald-400 font-medium font-mono flex items-center gap-1.5 text-[11px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              PWA &amp; GitHub Pages Active
             </span>
             <span>•</span>
             <button
               onClick={() => setIsDataModalOpen(true)}
-              className="text-slate-400 hover:text-slate-200 transition underline"
+              className="text-zinc-400 hover:text-zinc-200 transition underline cursor-pointer"
             >
-              Export Data Backup
+              Export JSON Backup
             </button>
           </div>
         </div>

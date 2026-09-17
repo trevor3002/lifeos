@@ -54,7 +54,7 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
   };
 
   const handleConfirmReset = () => {
-    if (window.confirm('Reset all Life OS data to default starter template? This will replace your current entries.')) {
+    if (window.confirm('Reset all Life OS data to starter template? This will restore initial habits and tasks.')) {
       onReset();
       setFeedback({ type: 'success', message: 'Reset to sample Life OS data!' });
       setTimeout(() => {
@@ -65,25 +65,28 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:p-6 shadow-2xl text-slate-100">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/85 p-0 sm:p-4 backdrop-blur-sm animate-in fade-in">
+      <div className="w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl border-t sm:border border-[#24282f] bg-[#121316] p-5 sm:p-6 shadow-2xl text-zinc-100 max-h-[90vh] overflow-y-auto">
+        {/* Mobile Drag Indicator Handle */}
+        <div className="w-12 h-1 rounded-full bg-zinc-700 mx-auto mb-3 sm:hidden" />
+
+        <div className="flex items-center justify-between pb-3 border-b border-[#1f2228]">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-indigo-400" />
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+            <Database className="w-4 h-4 text-amber-400" />
+            <h3 className="text-xs font-mono font-bold text-zinc-100 uppercase tracking-wider">
               Data &amp; Backup Hub
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-white min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <p className="mt-3 text-xs text-slate-400 leading-relaxed">
-          Life OS operates 100% client-side with offline PWA storage. Your data is stored securely in your browser. Use the options below to back up or migrate your records.
+        <p className="mt-3 text-xs text-zinc-400 leading-relaxed">
+          Life OS operates 100% client-side with offline PWA caching. All entries reside in your browser's persistent storage. Back up or migrate your records anytime.
         </p>
 
         {feedback && (
@@ -103,22 +106,22 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
           </div>
         )}
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-2.5">
           {/* Export */}
           <button
             onClick={onExport}
-            className="w-full flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/80 p-3.5 hover:border-indigo-500/40 hover:bg-slate-950 transition text-left group"
+            className="w-full flex items-center justify-between rounded-xl border border-[#24282f] bg-[#16181d] p-3.5 hover:border-amber-500/40 transition text-left group min-h-[52px]"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-800 text-amber-400 border border-zinc-700">
                 <Download className="w-4 h-4" />
               </div>
               <div>
-                <div className="text-xs font-semibold text-white">Export Backup (JSON)</div>
-                <div className="text-[11px] text-slate-400">Download all your tasks, habits &amp; journal logs</div>
+                <div className="text-xs font-semibold text-zinc-100">Export Backup (JSON)</div>
+                <div className="text-[11px] text-zinc-400">Download tasks, habits &amp; journal records</div>
               </div>
             </div>
-            <span className="text-xs text-indigo-400 group-hover:translate-x-0.5 transition">Save</span>
+            <span className="text-xs font-mono text-amber-400 group-hover:translate-x-0.5 transition">Save</span>
           </button>
 
           {/* Import */}
@@ -132,43 +135,43 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/80 p-3.5 hover:border-teal-500/40 hover:bg-slate-950 transition text-left group"
+              className="w-full flex items-center justify-between rounded-xl border border-[#24282f] bg-[#16181d] p-3.5 hover:border-emerald-500/40 transition text-left group min-h-[52px]"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600/20 text-teal-400 border border-teal-500/30">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-800 text-emerald-400 border border-zinc-700">
                   <Upload className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold text-white">Import Backup (JSON)</div>
-                  <div className="text-[11px] text-slate-400">Restore or transfer from another device</div>
+                  <div className="text-xs font-semibold text-zinc-100">Import Backup (JSON)</div>
+                  <div className="text-[11px] text-zinc-400">Restore or transfer from another device</div>
                 </div>
               </div>
-              <span className="text-xs text-teal-400 group-hover:translate-x-0.5 transition">Open</span>
+              <span className="text-xs font-mono text-emerald-400 group-hover:translate-x-0.5 transition">Open</span>
             </button>
           </div>
 
           {/* Reset */}
           <button
             onClick={handleConfirmReset}
-            className="w-full flex items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/40 p-3.5 hover:border-rose-500/40 transition text-left group"
+            className="w-full flex items-center justify-between rounded-xl border border-[#24282f] bg-[#0c0d10] p-3.5 hover:border-rose-500/40 transition text-left group min-h-[52px]"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-600/10 text-rose-400 border border-rose-500/20">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-rose-400 border border-zinc-800">
                 <RotateCcw className="w-4 h-4" />
               </div>
               <div>
-                <div className="text-xs font-semibold text-slate-300">Reset to Starter Demo</div>
-                <div className="text-[11px] text-slate-500">Restore default demo templates &amp; habits</div>
+                <div className="text-xs font-semibold text-zinc-300">Reset to Starter Demo</div>
+                <div className="text-[11px] text-zinc-500">Restore default demo templates &amp; habits</div>
               </div>
             </div>
-            <span className="text-xs text-slate-500 group-hover:text-rose-400 transition">Reset</span>
+            <span className="text-xs font-mono text-zinc-500 group-hover:text-rose-400 transition">Reset</span>
           </button>
         </div>
 
         <div className="mt-5 flex justify-end">
           <button
             onClick={onClose}
-            className="rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 text-xs font-medium"
+            className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 text-xs font-medium min-h-[40px]"
           >
             Done
           </button>

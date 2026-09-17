@@ -10,7 +10,7 @@ export const OfflineIndicator: React.FC = () => {
   return (
     <div
       id="pwa-offline-indicator"
-      className="fixed bottom-4 left-4 z-50 flex items-center gap-2.5 rounded-xl border border-amber-500/30 bg-amber-950/90 px-4 py-2.5 text-xs font-medium text-amber-200 shadow-xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-3"
+      className="fixed bottom-20 sm:bottom-4 left-4 right-4 sm:right-auto z-50 flex items-center gap-2.5 rounded-xl border border-amber-500/30 bg-[#121316] px-4 py-2.5 text-xs font-medium text-amber-200 shadow-xl backdrop-blur-md transition-all animate-in fade-in slide-in-from-bottom-3"
     >
       <WifiOff className="h-4 w-4 text-amber-400 shrink-0 animate-pulse" />
       <span>

@@ -37,7 +37,6 @@ export const DailyReviewModal: React.FC<DailyReviewModalProps> = ({
 
   const todayStr = getTodayString();
   const completedHabits = habits.filter((h) => h.completions[todayStr]);
-  const pendingHabits = habits.filter((h) => !h.completions[todayStr]);
 
   const handleShareSummary = () => {
     const summaryText = `Life OS Daily Review (${formatDatePretty(todayStr)})
@@ -48,28 +47,31 @@ Score: ${dailyScore}%
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(summaryText);
-      alert('Daily summary copied to clipboard!');
+      alert('Daily Life OS summary copied to clipboard!');
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm animate-in fade-in">
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:p-6 shadow-2xl text-slate-100">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/85 p-0 sm:p-4 backdrop-blur-sm animate-in fade-in">
+      <div className="relative w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border-t sm:border border-[#24282f] bg-[#121316] p-5 sm:p-6 shadow-2xl text-zinc-100">
+        {/* Mobile Drag Indicator Handle */}
+        <div className="w-12 h-1 rounded-full bg-zinc-700 mx-auto mb-3 sm:hidden" />
+
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-3.5 border-b border-[#1f2228]">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
-              <Sparkles className="w-5 h-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-800 text-amber-400 border border-zinc-700">
+              <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white">Daily Life OS Synthesis</h3>
-              <p className="text-xs text-slate-400">{formatDatePretty(todayStr)}</p>
+              <h3 className="text-base sm:text-lg font-bold text-zinc-100">Daily Life OS Synthesis</h3>
+              <p className="text-xs text-zinc-400 font-mono">{formatDatePretty(todayStr)}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handleShareSummary}
-              className="flex items-center gap-1 rounded-lg border border-slate-800 bg-slate-950 px-2.5 py-1 text-xs text-slate-300 hover:text-white transition"
+              className="flex items-center gap-1 rounded-lg border border-[#24282f] bg-[#0c0d10] px-2.5 py-1.5 text-xs text-zinc-300 hover:text-white transition min-h-[36px]"
               title="Copy text summary"
             >
               <Share2 className="w-3.5 h-3.5" />
@@ -77,48 +79,46 @@ Score: ${dailyScore}%
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white"
+              className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-white transition min-h-[36px] min-w-[36px] flex items-center justify-center"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Daily Score & Grade Banner */}
-        <div className="mt-4 rounded-xl border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-slate-900 to-emerald-950/40 p-4 flex items-center justify-between">
+        <div className="mt-4 rounded-xl border border-[#2e333b] bg-[#16181d] p-4 flex items-center justify-between">
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-400">
-              Today's Holistic Performance
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-400">
+              Holistic Daily Execution
             </span>
-            <div className="text-2xl font-black text-white flex items-center gap-2">
+            <div className="text-2xl font-bold font-mono text-zinc-100 flex items-center gap-2">
               <span>{dailyScore}% Alignment</span>
-              {dailyScore >= 80 && <Trophy className="w-6 h-6 text-amber-400" />}
+              {dailyScore >= 80 && <Trophy className="w-5 h-5 text-amber-400" />}
             </div>
-            <p className="text-xs text-slate-300">
-              {dailyScore >= 90
-                ? 'Prime focus and complete daily routine harmony achieved!'
+            <p className="text-xs text-zinc-300">
+              {dailyScore >= 85
+                ? 'Disciplined focus and deep routine harmony sustained today.'
                 : dailyScore >= 60
-                ? 'Strong daily traction across your key domains.'
-                : 'Focus on finishing 1 high-priority task and completing evening habits.'}
+                ? 'Strong daily momentum across your key priorities.'
+                : 'Complete 1 remaining action item and evening wind-down.'}
             </p>
           </div>
         </div>
 
         {/* 3 Pillars Deep Dive */}
-        <div className="mt-5 space-y-4">
+        <div className="mt-4 space-y-3.5">
           {/* Pillar 1: Tasks */}
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4" />
-                Tasks Breakdown ({tasksCompleted.length} of {tasksCompleted.length + tasksPending.length} Completed)
-              </h4>
-            </div>
+          <div className="rounded-xl border border-[#24282f] bg-[#0c0d10] p-3.5">
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5 mb-2">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              Tasks Breakdown ({tasksCompleted.length} / {tasksCompleted.length + tasksPending.length} Complete)
+            </h4>
             {tasksCompleted.length > 0 && (
-              <div className="space-y-1 mb-3">
-                <div className="text-[11px] font-semibold text-emerald-400">Completed:</div>
+              <div className="space-y-1 mb-2">
+                <div className="text-[10px] font-mono uppercase text-emerald-400">Completed:</div>
                 {tasksCompleted.map((t) => (
-                  <div key={t.id} className="text-xs text-slate-300 flex items-center gap-1.5 pl-2">
+                  <div key={t.id} className="text-xs text-zinc-300 flex items-center gap-1.5 pl-2">
                     <span className="text-emerald-400">✓</span> {t.title}
                   </div>
                 ))}
@@ -126,10 +126,10 @@ Score: ${dailyScore}%
             )}
             {tasksPending.length > 0 && (
               <div className="space-y-1">
-                <div className="text-[11px] font-semibold text-amber-400">Pending:</div>
+                <div className="text-[10px] font-mono uppercase text-zinc-500">Pending:</div>
                 {tasksPending.map((t) => (
-                  <div key={t.id} className="text-xs text-slate-400 flex items-center gap-1.5 pl-2">
-                    <span className="text-slate-600">•</span> {t.title}
+                  <div key={t.id} className="text-xs text-zinc-400 flex items-center gap-1.5 pl-2">
+                    <span className="text-zinc-600">•</span> {t.title}
                   </div>
                 ))}
               </div>
@@ -137,14 +137,12 @@ Score: ${dailyScore}%
           </div>
 
           {/* Pillar 2: Habits */}
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
-                <Flame className="w-4 h-4" />
-                Habits Maintained ({completedHabits.length} of {habits.length})
-              </h4>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="rounded-xl border border-[#24282f] bg-[#0c0d10] p-3.5">
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5 mb-2">
+              <Flame className="w-3.5 h-3.5 text-amber-400" />
+              Protocols Maintained ({completedHabits.length} / {habits.length})
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {habits.map((h) => {
                 const done = !!h.completions[todayStr];
                 return (
@@ -152,12 +150,12 @@ Score: ${dailyScore}%
                     key={h.id}
                     className={`flex items-center justify-between rounded-lg p-2 text-xs border ${
                       done
-                        ? 'border-teal-500/30 bg-teal-950/20 text-teal-200'
-                        : 'border-slate-800 bg-slate-900/60 text-slate-400'
+                        ? 'border-emerald-500/30 bg-emerald-950/20 text-emerald-300'
+                        : 'border-[#24282f] bg-[#14161a] text-zinc-400'
                     }`}
                   >
                     <span>{h.name}</span>
-                    <span className="font-bold">{done ? '✓ Done' : 'Pending'}</span>
+                    <span className="font-mono font-semibold">{done ? '✓ Maintained' : 'Pending'}</span>
                   </div>
                 );
               })}
@@ -165,39 +163,37 @@ Score: ${dailyScore}%
           </div>
 
           {/* Pillar 3: Journal */}
-          <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-pink-400 flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4" />
-                Daily Reflection &amp; Mindset
-              </h4>
-            </div>
+          <div className="rounded-xl border border-[#24282f] bg-[#0c0d10] p-3.5">
+            <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5 mb-2">
+              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+              Mindful Reflection &amp; State
+            </h4>
             {todayJournal ? (
-              <div className="space-y-2 text-xs text-slate-300">
+              <div className="space-y-2 text-xs text-zinc-300">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-white text-sm">{todayJournal.title}</span>
-                  <span className="text-[11px] text-pink-400">
-                    Mood: {MOOD_META[todayJournal.mood]?.icon} {MOOD_META[todayJournal.mood]?.label}
+                  <span className="font-bold text-zinc-100">{todayJournal.title}</span>
+                  <span className="text-[11px] text-zinc-400 font-mono">
+                    State: {MOOD_META[todayJournal.mood]?.icon} {MOOD_META[todayJournal.mood]?.label}
                   </span>
                 </div>
-                <p className="line-clamp-3 text-slate-400 italic">"{todayJournal.content}"</p>
+                <p className="line-clamp-3 text-zinc-400 italic">"{todayJournal.content}"</p>
                 {todayJournal.gratitude && todayJournal.gratitude.length > 0 && (
-                  <div className="text-[11px] text-pink-300">
-                    <strong>Gratitudes:</strong> {todayJournal.gratitude.join(' • ')}
+                  <div className="text-[11px] text-zinc-400">
+                    <strong className="text-zinc-300">Gratitudes:</strong> {todayJournal.gratitude.join(' • ')}
                   </div>
                 )}
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <span className="text-xs text-slate-400">You haven't written today's reflection yet.</span>
+                <span className="text-xs text-zinc-400">No journal reflection captured for today yet.</span>
                 <button
                   onClick={() => {
                     onClose();
                     onOpenQuickJournal();
                   }}
-                  className="rounded-lg bg-pink-600 hover:bg-pink-500 text-white px-3 py-1.5 text-xs font-medium"
+                  className="rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 px-3 py-1.5 text-xs font-bold min-h-[36px]"
                 >
-                  Log Reflection Now
+                  Log Reflection
                 </button>
               </div>
             )}
@@ -205,10 +201,10 @@ Score: ${dailyScore}%
         </div>
 
         {/* Footer */}
-        <div className="mt-6 flex justify-end">
+        <div className="mt-5 flex justify-end">
           <button
             onClick={onClose}
-            className="rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 text-xs font-semibold transition"
+            className="rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-4 py-2 text-xs font-semibold transition min-h-[40px]"
           >
             Close Synthesis
           </button>

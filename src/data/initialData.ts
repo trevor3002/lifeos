@@ -116,7 +116,7 @@ export const defaultLifeOSData: LifeOSData = {
       category: 'work',
       timeOfDay: 'morning',
       targetDaysPerWeek: 5,
-      color: '#6366f1', // indigo
+      color: '#d97706', // warm bronze
       completions: {
         [getPastDateStr(4)]: true,
         [getPastDateStr(3)]: true,
@@ -134,7 +134,7 @@ export const defaultLifeOSData: LifeOSData = {
       category: 'learning',
       timeOfDay: 'afternoon',
       targetDaysPerWeek: 7,
-      color: '#06b6d4', // cyan
+      color: '#14b8a6', // teal
       completions: {
         [getPastDateStr(3)]: true,
         [getPastDateStr(2)]: true,
@@ -168,7 +168,7 @@ export const defaultLifeOSData: LifeOSData = {
       category: 'personal',
       timeOfDay: 'evening',
       targetDaysPerWeek: 7,
-      color: '#ec4899', // pink
+      color: '#ea580c', // terracotta orange
       completions: {
         [getPastDateStr(5)]: true,
         [getPastDateStr(4)]: true,
