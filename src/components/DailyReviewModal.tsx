@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Task, Habit, JournalEntry } from '../types';
 import { formatDatePretty, getTodayString } from '../utils/dateUtils';
 import { MOOD_META } from '../utils/domainColors';
@@ -33,21 +33,24 @@ export const DailyReviewModal: React.FC<DailyReviewModalProps> = ({
   dailyScore,
   onOpenQuickJournal,
 }) => {
+  const [copied, setCopied] = useState(false);
   if (!isOpen) return null;
 
   const todayStr = getTodayString();
-  const completedHabits = habits.filter((h) => h.completions[todayStr]);
+  const safeHabits = Array.isArray(habits) ? habits : [];
+  const completedHabits = safeHabits.filter((h) => h?.completions && h.completions[todayStr]);
 
   const handleShareSummary = () => {
     const summaryText = `Life OS Daily Review (${formatDatePretty(todayStr)})
 Score: ${dailyScore}%
 - Tasks Done: ${tasksCompleted.length}/${tasksCompleted.length + tasksPending.length}
-- Habits Maintained: ${completedHabits.length}/${habits.length}
+- Habits Maintained: ${completedHabits.length}/${safeHabits.length}
 - Reflection: ${todayJournal ? `Logged (${todayJournal.title})` : 'Pending'}`;
 
     if (navigator.clipboard) {
       navigator.clipboard.writeText(summaryText);
-      alert('Daily Life OS summary copied to clipboard!');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     }
   };
 
@@ -71,11 +74,11 @@ Score: ${dailyScore}%
           <div className="flex items-center gap-2">
             <button
               onClick={handleShareSummary}
-              className="flex items-center gap-1 rounded-lg border border-[#24282f] bg-[#0c0d10] px-2.5 py-1.5 text-xs text-zinc-300 hover:text-white transition min-h-[36px]"
+              className="flex items-center gap-1.5 rounded-lg border border-[#24282f] bg-[#0c0d10] px-2.5 py-1.5 text-xs text-zinc-300 hover:text-white transition min-h-[36px]"
               title="Copy text summary"
             >
-              <Share2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Copy</span>
+              <Share2 className="w-3.5 h-3.5 text-amber-400" />
+              <span>{copied ? 'Copied!' : 'Copy Summary'}</span>
             </button>
             <button
               onClick={onClose}
@@ -140,11 +143,11 @@ Score: ${dailyScore}%
           <div className="rounded-xl border border-[#24282f] bg-[#0c0d10] p-3.5">
             <h4 className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5 mb-2">
               <Flame className="w-3.5 h-3.5 text-amber-400" />
-              Protocols Maintained ({completedHabits.length} / {habits.length})
+              Protocols Maintained ({completedHabits.length} / {safeHabits.length})
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              {habits.map((h) => {
-                const done = !!h.completions[todayStr];
+              {safeHabits.map((h) => {
+                const done = !!(h?.completions && h.completions[todayStr]);
                 return (
                   <div
                     key={h.id}

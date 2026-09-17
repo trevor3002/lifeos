@@ -50,7 +50,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
 
   // Filter journals
   const filteredJournals = journals.filter((j) => {
-    if (selectedTagFilter !== 'all' && !j.tags.includes(selectedTagFilter)) return false;
+    if (selectedTagFilter !== 'all' && !(j.tags || []).includes(selectedTagFilter)) return false;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchTitle = j.title.toLowerCase().includes(q);
@@ -438,7 +438,7 @@ export const JournalSection: React.FC<JournalSectionProps> = ({
 
                 {/* Tags Footer */}
                 <div className="flex items-center gap-1.5 pt-1 flex-wrap">
-                  {entry.tags.map((t) => (
+                  {(entry.tags || []).map((t) => (
                     <span
                       key={t}
                       className="text-[10px] font-mono font-medium text-zinc-400 bg-[#0c0d10] border border-[#24282f] px-2 py-0.5 rounded"

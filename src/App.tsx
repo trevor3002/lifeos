@@ -75,8 +75,8 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const todayPendingTasks = todayTasks.filter((t) => t.status !== 'completed');
-  const todayCompletedHabitsList = habits.filter((h) => h.completions[today]);
+  const todayPendingTasks = (todayTasks || []).filter((t) => t.status !== 'completed');
+  const todayCompletedHabitsList = (habits || []).filter((h) => h?.completions && h.completions[today]);
 
   return (
     <div className="min-h-screen bg-[#0c0d10] text-zinc-100 flex flex-col selection:bg-amber-500/30 selection:text-amber-200">

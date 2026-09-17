@@ -96,23 +96,27 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
     // Check if toggling today's date completes all habits
     if (dateStr === todayStr) {
       const remainingBefore = habits.filter(
-        (h) => h.id !== habitId && !h.completions[todayStr]
+        (h) => h.id !== habitId && !(h.completions && h.completions[todayStr])
       ).length;
-      const willBeDone = !habits.find((h) => h.id === habitId)?.completions[todayStr];
+      const willBeDone = !(habits.find((h) => h.id === habitId)?.completions?.[todayStr]);
 
       if (remainingBefore === 0 && willBeDone) {
         // Confetti celebration with warm amber & emerald particles
-        confetti({
-          particleCount: 50,
-          spread: 60,
-          origin: { y: 0.7 },
-          colors: ['#f59e0b', '#10b981', '#d97706', '#ffffff'],
-        });
+        try {
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.7 },
+            colors: ['#f59e0b', '#10b981', '#d97706', '#ffffff'],
+          });
+        } catch {
+          // ignore if canvas unavailable
+        }
       }
     }
   };
 
-  const todayCompletedCount = habits.filter((h) => h.completions[todayStr]).length;
+  const todayCompletedCount = habits.filter((h) => h?.completions && h.completions[todayStr]).length;
 
   return (
     <section className="rounded-2xl border border-[#24282f] bg-[#121316] p-4 sm:p-5 shadow-sm">
@@ -306,7 +310,8 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
         ) : (
           filteredHabits.map((habit) => {
             const domainMeta = DOMAIN_META[habit.category] || DOMAIN_META.health;
-            const isDoneToday = !!habit.completions[todayStr];
+            const completions = habit.completions || {};
+            const isDoneToday = !!completions[todayStr];
 
             return (
               <div
@@ -340,7 +345,7 @@ export const HabitSection: React.FC<HabitSectionProps> = ({
                 <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2 pt-1 sm:pt-0">
                   <div className="flex items-center gap-1 sm:gap-2">
                     {recentDays.map((day) => {
-                      const completed = !!habit.completions[day.dateStr];
+                      const completed = !!completions[day.dateStr];
                       const isToday = day.isToday;
 
                       return (

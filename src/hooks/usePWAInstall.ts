@@ -14,8 +14,8 @@ export function usePWAInstall() {
     // Detect standalone mode (already running as installed PWA)
     const isStandalone =
       typeof window !== 'undefined' &&
-      (window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as unknown as { standalone?: boolean }).standalone === true);
+      (Boolean(window.matchMedia && window.matchMedia('(display-mode: standalone)')?.matches) ||
+        (window.navigator as unknown as { standalone?: boolean })?.standalone === true);
     setIsInstalled(isStandalone);
 
     // Detect iOS devices

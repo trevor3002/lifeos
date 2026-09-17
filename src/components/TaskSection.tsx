@@ -59,7 +59,7 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
       const q = searchQuery.toLowerCase();
       const matchTitle = t.title.toLowerCase().includes(q);
       const matchDesc = t.description?.toLowerCase().includes(q) || false;
-      const matchSub = t.subtasks.some((st) => st.title.toLowerCase().includes(q));
+      const matchSub = (t.subtasks || []).some((st) => st.title.toLowerCase().includes(q));
       if (!matchTitle && !matchDesc && !matchSub) return false;
     }
     return true;
@@ -325,7 +325,8 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
             const domainMeta = DOMAIN_META[task.domain];
             const priorityMeta = PRIORITY_META[task.priority];
             const isExpanded = expandedTaskIds[task.id];
-            const completedSubtasks = task.subtasks.filter((st) => st.completed).length;
+            const subtaskList = Array.isArray(task.subtasks) ? task.subtasks : [];
+            const completedSubtasks = subtaskList.filter((st) => st.completed).length;
 
             return (
               <div
@@ -410,7 +411,7 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
                     )}
 
                     {/* Subtasks summary bar */}
-                    {task.subtasks.length > 0 && (
+                    {subtaskList.length > 0 && (
                       <div className="mt-2.5 flex items-center gap-3">
                         <button
                           onClick={() => toggleExpand(task.id)}
@@ -418,7 +419,7 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
                         >
                           <Layers className="w-3.5 h-3.5 text-zinc-500" />
                           <span>
-                            {completedSubtasks}/{task.subtasks.length} subtasks
+                            {completedSubtasks}/{subtaskList.length} subtasks
                           </span>
                           {isExpanded ? (
                             <ChevronUp className="w-3.5 h-3.5 text-zinc-500" />
@@ -431,7 +432,7 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
                           <div
                             className="h-full bg-emerald-500 transition-all duration-300"
                             style={{
-                              width: `${(completedSubtasks / task.subtasks.length) * 100}%`,
+                              width: `${(completedSubtasks / subtaskList.length) * 100}%`,
                             }}
                           />
                         </div>
@@ -439,9 +440,9 @@ export const TaskSection: React.FC<TaskSectionProps> = ({
                     )}
 
                     {/* Expanded Subtasks List */}
-                    {isExpanded && task.subtasks.length > 0 && (
+                    {isExpanded && subtaskList.length > 0 && (
                       <div className="mt-2 space-y-1 rounded-lg bg-[#0c0d10] p-2.5 border border-[#24282f]">
-                        {task.subtasks.map((st) => (
+                        {subtaskList.map((st) => (
                           <div
                             key={st.id}
                             onClick={() => onToggleSubtask(task.id, st.id)}
