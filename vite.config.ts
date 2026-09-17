@@ -6,7 +6,6 @@ import {VitePWA} from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
-    base: './', // Ensures assets load properly on GitHub Pages custom path or root
     plugins: [
       react(),
       tailwindcss(),
@@ -21,15 +20,14 @@ export default defineConfig(() => {
           'pwa-maskable-512x512.png',
         ],
         manifest: {
-          id: './',
           name: 'Life OS - Dashboard',
           short_name: 'LifeOS',
           description: 'An intuitive personal Life OS integrating tasks, habits, and daily journaling into a unified dashboard.',
           theme_color: '#0c0d10',
           background_color: '#0c0d10',
           display: 'standalone',
-          start_url: './',
-          scope: './',
+          start_url: '/',
+          scope: '/',
           icons: [
             {
               src: 'pwa-192x192.png',

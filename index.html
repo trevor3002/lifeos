@@ -17,43 +17,24 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="LifeOS" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-    <link rel="alternate icon" href="./favicon.ico" />
+    <!-- Immediate cleanup of stale service workers from earlier sessions -->
+    <script>
+      (function() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (var i = 0; i < registrations.length; i++) {
+              registrations[i].unregister();
+            }
+          }).catch(function() {});
+        }
+      })();
+    </script>
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
   </head>
   <body class="bg-[#0c0d10] text-zinc-100 antialiased selection:bg-amber-500/30 selection:text-amber-200">
-    <div id="root">
-      <!-- Fallback display if JS is disabled or taking a moment to mount -->
-      <div id="loading-fallback" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #0c0d10; color: #f4f4f5; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; padding: 1.5rem; text-align: center;">
-        <div style="width: 44px; height: 44px; border-radius: 12px; background: #181a20; border: 1px solid #f59e0b; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: #f59e0b; font-weight: bold; font-size: 1.25rem;">
-          ⚡
-        </div>
-        <div style="font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.25rem;">
-          Life OS
-        </div>
-        <div style="font-size: 0.75rem; color: #a1a1aa; max-width: 260px; line-height: 1.4;">
-          Loading unified dashboard...
-        </div>
-      </div>
-    </div>
-    <script>
-      // Self-healing handler for stale service worker / chunk load failures
-      window.addEventListener('error', function(e) {
-        if (e && e.message && (e.message.indexOf('dynamically imported module') !== -1 || e.message.indexOf('Loading chunk') !== -1)) {
-          console.warn('Chunk load error detected, recovering cache...', e);
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(regs) {
-              for (var i = 0; i < regs.length; i++) {
-                regs[i].unregister();
-              }
-              window.location.reload();
-            });
-          } else {
-            window.location.reload();
-          }
-        }
-      });
-    </script>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
