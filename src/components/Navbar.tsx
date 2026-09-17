@@ -1,6 +1,5 @@
 import React from 'react';
 import { ActiveTab, LifeDomain } from '../types';
-import { PWAInstallButton } from './PWAInstallButton';
 import {
   LayoutDashboard,
   CheckSquare,
@@ -118,9 +117,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Plus className="w-3.5 h-3.5 stroke-[3]" />
                 <span>Capture</span>
               </button>
-
-              {/* PWA Install Button */}
-              <PWAInstallButton />
 
               {/* Data Management Backup/Restore */}
               <button

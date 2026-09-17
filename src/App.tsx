@@ -206,7 +206,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <span className="text-emerald-400 font-medium font-mono flex items-center gap-1.5 text-[11px]">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              PWA &amp; GitHub Pages Active
+              Local Storage Persistence Active
             </span>
             <span>•</span>
             <button
